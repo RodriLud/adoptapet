@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">AdoptaPet</string>
+    <string name="app_title">AdoptaPet</string>
+    <string name="app_subtitle">Encuentra un compañero que te cambiará la vida</string>
+    <string name="btn_login">Iniciar sesión</string>">
+    <string name="btn_register">Registrarse</string>
+    <string name="btn_close_session">Cerrar sesión</string>
+    <string name="register_title">Crear Cuenta</string>
+    <string name="register_subtitle">Regístrate para adoptar una mascota</string>
+</resources>
