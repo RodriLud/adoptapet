@@ -28,4 +28,6 @@
     <string name="detail_title">Detalle de mascota</string>
     <string name="request_title">Mis solicitudes</string>
     <string name="request_subtitle">Todavía no tienes solicitudes de adopción</string>
+    <string name="btn_approve">Aprovar</string>
+    <string name="btn_rejecg">Rechazar</string>
 </resources>
