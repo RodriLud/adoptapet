@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/espacio_grande"
-            android:hint="Nombre completo">
+            android:hint="@string/fullname">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edtNombreRegistro"
@@ -43,7 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/espacio_pequeno"
-            android:hint="Correo electrónico">
+            android:hint="@string/email">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edtCorreoRegistro"
@@ -56,7 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/espacio_pequeno"
-            android:hint="Teléfono">
+            android:hint="@string/phone">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edtTelefonoRegistro"
@@ -69,7 +69,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/espacio_pequeno"
-            android:hint="Contraseña"
+            android:hint="@string/password_label"
             app:endIconMode="password_toggle">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -84,7 +84,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/espacio_grande"
-            android:text="Registrarme"
+            android:text="@string/btn_register"
             android:textAllCaps="false"
             app:cornerRadius="24dp" />
 
@@ -94,7 +94,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/espacio_medio"
             android:gravity="center"
-            android:text="¿Ya tienes cuenta? Inicia sesión"
+            android:text="@string/btn_go_login"
             android:textColor="@color/color_principal"
             android:textStyle="bold" />
 

@@ -10,6 +10,7 @@ import com.cibertec.adoptapet.databinding.ActivityMainBinding
 import com.cibertec.adoptapet.fragments.FavoritesFragment
 import com.cibertec.adoptapet.fragments.HomeFragment
 import com.cibertec.adoptapet.fragments.ProfileFragment
+import com.cibertec.adoptapet.fragments.RequestsFragment
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -25,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navInicio -> cambiarFragment(HomeFragment())
-                R.id.navSolicitudes -> cambiarFragment(FavoritesFragment())
+                R.id.navSolicitudes -> cambiarFragment(RequestsFragment())
                 R.id.navFavoritos -> cambiarFragment(FavoritesFragment())
                 R.id.navNotificaciones -> cambiarFragment(HomeFragment())
                 R.id.navPerfil -> cambiarFragment(ProfileFragment())

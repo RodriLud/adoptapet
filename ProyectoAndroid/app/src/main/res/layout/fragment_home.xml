@@ -15,7 +15,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Encuentra tu nuevo amigo"
+            android:text="@string/home_title"
             android:textColor="@color/color_texto"
             android:textSize="26sp"
             android:textStyle="bold" />
@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Mascotas disponibles para adopción"
+            android:text="@string/home_subtitle"
             android:textColor="@color/color_texto_secundario"
             android:textSize="15sp" />
 
@@ -39,7 +39,7 @@
                 android:id="@+id/edtBuscar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Buscar mascota..." />
+                android:hint="@string/search_title" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -58,7 +58,7 @@
                     android:id="@+id/btnTodas"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Todas" />
+                    android:text="@string/btn_all" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnPerros"
@@ -66,7 +66,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="Perros" />
+                    android:text="@string/btn_dogs" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnGatos"
@@ -74,7 +74,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="Gatos" />
+                    android:text="@string/btn_cats" />
 
             </LinearLayout>
 

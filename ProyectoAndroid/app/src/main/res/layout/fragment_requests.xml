@@ -10,25 +10,25 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/favorites_title"
+        android:text="@string/request_subtitle"
         android:textColor="@color/color_texto"
         android:textSize="26sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/txtFavoritosVacio"
+        android:id="@+id/txtSolicitudesVacio"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/espacio_grande"
         android:gravity="center"
-        android:text="@string/favorites_subtitle"
+        android:text="@string/request_subtitle"
         android:textColor="@color/color_texto_secundario"
         android:textSize="18sp" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvFavoritos"
+        android:id="@+id/rvSolicitudes"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/espacio_medio"/>
+        android:layout_marginTop="@dimen/espacio_medio" />
 
 </LinearLayout>
