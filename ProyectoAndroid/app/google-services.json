@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "447345034553",
+    "project_id": "proyectoandroid-ad32e",
+    "storage_bucket": "proyectoandroid-ad32e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:447345034553:android:1960bc101a2b5e9e4294e8",
+        "android_client_info": {
+          "package_name": "com.cibertec.adoptapet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqTCB2QJPOiwyLgavzivluu0yrT0fMwLk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
