@@ -1,0 +1,44 @@
+:host {
+  display: block;
+}
+
+.modal-content-custom {
+  width: min(560px, 100%);
+}
+
+.availability-note {
+  margin-top: -6px;
+}
+
+.delivery-filter {
+  display: grid;
+  gap: 6px;
+  min-width: min(100%, 300px);
+}
+
+.delivery-filter .ap-label {
+  margin-bottom: 0;
+}
+
+.delivery-filter-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.delivery-filter-control .ap-input {
+  min-width: 170px;
+}
+
+@media (max-width: 720px) {
+  .delivery-filter,
+  .delivery-filter-control,
+  .delivery-filter-control .ap-button {
+    width: 100%;
+  }
+
+  .delivery-filter-control {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

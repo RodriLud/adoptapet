@@ -6,145 +6,208 @@
     android:layout_height="match_parent"
     android:background="@color/color_fondo">
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollFormulario"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:clipToPadding="false">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbarFormulario"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/color_principal"
-            android:title="Solicitud de adopción"
-            android:titleTextColor="@color/white"
-            app:navigationIcon="@android:drawable/ic_menu_revert"
-            app:navigationIconTint="@color/white" />
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/bg_header_purple"
                 android:orientation="vertical"
-                android:padding="@dimen/espacio_medio">
+                android:paddingStart="@dimen/espacio_medio"
+                android:paddingTop="@dimen/espacio_grande"
+                android:paddingEnd="@dimen/espacio_medio"
+                android:paddingBottom="@dimen/espacio_grande">
+
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/toolbarFormulario"
+                    style="@style/Widget.AdoptaPet.Toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    app:navigationIcon="@android:drawable/ic_menu_revert"
+                    app:title="@string/adoption_form_title" />
 
                 <TextView
                     android:id="@+id/tvMascotaFormulario"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Adoptar a Luna"
-                    android:textColor="@color/color_texto"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/espacio_medio"
-                    android:hint="Nombre completo">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edtNombre"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/espacio_pequeno"
-                    android:hint="DNI">
+                    android:text="@string/sample_adoption_form_pet"
+                    style="@style/TextScreenTitle" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edtDni"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="number" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/espacio_pequeno"
-                    android:hint="Teléfono">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edtTelefono"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="phone" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/espacio_pequeno"
-                    android:hint="Correo electrónico">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edtCorreo"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textEmailAddress" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/espacio_pequeno"
-                    android:hint="Dirección">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edtDireccion"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/espacio_pequeno"
-                    android:hint="¿Tienes experiencia previa con mascotas?">
-
-                    <AutoCompleteTextView
-                        android:id="@+id/autoCompleteExperiencia"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="none" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/espacio_medio"
-                    android:hint="¿Por qué deseas adoptar?">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edtMotivo"
-                        android:layout_width="match_parent"
-                        android:layout_height="120dp"
-                        android:gravity="top"
-                        android:inputType="textMultiLine" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnEnviarSolicitud"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/espacio_grande"
-                    android:text="Enviar solicitud"
-                    android:textAllCaps="false"
-                    app:cornerRadius="24dp" />
-
+                    android:layout_marginTop="6dp"
+                    android:text="@string/adoption_form_subtitle"
+                    style="@style/TextScreenSubtitle" />
             </LinearLayout>
 
-        </ScrollView>
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.AdoptaPet.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/espacio_medio"
+                android:layout_marginTop="-24dp"
+                android:layout_marginEnd="@dimen/espacio_medio"
+                android:layout_marginBottom="@dimen/espacio_grande">
 
-    </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/espacio_medio">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/adoption_form_home_section"
+                        style="@style/TextSectionTitle" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.AdoptaPet.TextInput.Dropdown"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/espacio_pequeno"
+                        android:hint="@string/adoption_form_reason">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/autoCompleteMotivo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/adoption_form_reason"
+                            android:inputType="none"
+                            android:popupBackground="@color/white"
+                            android:textColor="@color/color_texto" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.AdoptaPet.TextInput.Dropdown"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/espacio_pequeno"
+                        android:hint="@string/adoption_form_housing">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/autoCompleteVivienda"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/adoption_form_housing"
+                            android:inputType="none"
+                            android:popupBackground="@color/white"
+                            android:textColor="@color/color_texto" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.AdoptaPet.TextInput.Dropdown"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/espacio_pequeno"
+                        android:hint="@string/adoption_form_experience">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/autoCompleteExperiencia"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/adoption_form_experience"
+                            android:inputType="none"
+                            android:popupBackground="@color/white"
+                            android:textColor="@color/color_texto" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.AdoptaPet.TextInput.Dropdown"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/espacio_pequeno"
+                        android:hint="@string/adoption_form_other_pets">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/autoCompleteOtrasMascotas"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/adoption_form_other_pets"
+                            android:inputType="none"
+                            android:popupBackground="@color/white"
+                            android:textColor="@color/color_texto" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.AdoptaPet.TextInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/espacio_pequeno"
+                        android:hint="@string/adoption_form_people">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtCantidadPersonas"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:textColor="@color/color_texto" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.AdoptaPet.TextInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/espacio_medio"
+                        android:hint="@string/adoption_form_comments">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtMotivo"
+                            android:layout_width="match_parent"
+                            android:layout_height="120dp"
+                            android:gravity="top"
+                            android:inputType="textMultiLine"
+                            android:textColor="@color/color_texto" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/espacio_medio"
+                        android:text="@string/adoption_form_docs_section"
+                        style="@style/TextSectionTitle" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnArchivoDni"
+                        style="@style/Widget.AdoptaPet.Button.Outlined"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="@dimen/espacio_pequeno"
+                        android:text="@string/adoption_form_attach_dni" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnArchivoDomicilio"
+                        style="@style/Widget.AdoptaPet.Button.Outlined"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="@dimen/espacio_pequeno"
+                        android:text="@string/adoption_form_attach_address" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnEnviarSolicitud"
+                        style="@style/Widget.AdoptaPet.Button.Primary"
+                        android:layout_width="match_parent"
+                        android:layout_height="54dp"
+                        android:layout_marginTop="@dimen/espacio_medio"
+                        android:text="@string/adoption_form_send" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

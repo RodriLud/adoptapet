@@ -1,0 +1,182 @@
+<main class="admin-shell">
+  <app-sidebar />
+
+  <section class="content-area">
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">Gestion operativa</p>
+        <h1>Mascotas</h1>
+      </div>
+      <button class="ap-button ap-button-primary" (click)="abrirRegistrador()">Nueva mascota</button>
+    </header>
+
+    <div class="table-panel">
+      <div class="toolbar-panel">
+        <div class="section-kicker">
+          <div>
+            <h2>Inventario del refugio</h2>
+            <span>{{ mascotasFiltradas().length }} mascotas visibles</span>
+          </div>
+          <span class="status status-disponible">{{ disponibles() }} disponibles</span>
+        </div>
+
+        <div class="list-tools">
+          <input class="ap-input search-input" type="search" placeholder="Buscar por nombre, especie, raza o sexo" [(ngModel)]="busqueda" (ngModelChange)="alCambiarBusqueda()" />
+          <select class="ap-select compact-select" [(ngModel)]="filtroSalud" (change)="alCambiarBusqueda()">
+            <option value="">Todas las condiciones</option>
+            <option *ngFor="let estado of estadosSalud" [value]="estado">{{ estado }}</option>
+          </select>
+        </div>
+
+        <div class="filter-row status-filter">
+          <button class="ap-button ap-button-sm" *ngFor="let filtro of filtrosAdopcion" [class.ap-button-active]="filtroAdopcion === filtro.value" (click)="cambiarFiltroAdopcion(filtro.value)">
+            {{ filtro.label }}
+          </button>
+        </div>
+      </div>
+
+      <div class="skeleton-list" *ngIf="loading" aria-label="Cargando mascotas">
+        <span class="skeleton-row"></span>
+        <span class="skeleton-row"></span>
+        <span class="skeleton-row"></span>
+      </div>
+
+      <div class="ap-table-wrap" *ngIf="!loading">
+        <table class="ap-table">
+          <thead>
+            <tr>
+              <th>Mascota</th>
+              <th>Especie</th>
+              <th>Edad</th>
+              <th>Salud</th>
+              <th>Adopcion</th>
+              <th class="ap-text-end">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let m of mascotasPaginadas()">
+              <td>
+                <div class="pet-cell">
+                  <img [src]="imagenUrl(m)" alt="" />
+                  <div>
+                    <strong>{{ m.nombre }}</strong>
+                    <small>{{ m.raza }}</small>
+                    <small class="pet-meta">{{ m.sexo || 'Sin sexo' }} · {{ m.estado_esterilizacion || 'Esterilizacion pendiente' }}</small>
+                  </div>
+                </div>
+              </td>
+              <td>{{ m.especie }}</td>
+              <td>{{ m.edad_anios }} años {{ m.edad_meses }} meses</td>
+              <td><span class="status" [ngClass]="statusClass(m.est_salud)">{{ m.est_salud }}</span></td>
+              <td><span class="status" [ngClass]="statusClass(m.est_adopcion)">{{ m.est_adopcion }}</span></td>
+              <td class="ap-text-end">
+                <div class="action-cluster">
+                  <button class="ap-button ap-button-sm ap-button-secondary" (click)="abrirEditor(m)">{{ textoAccionMascota(m) }}</button>
+                  <button class="ap-button ap-button-sm ap-button-danger-outline" [disabled]="!puedeDarBaja(m) || mascotaProcesandoId === m.id_mascota" (click)="eliminar(m)">
+                    {{ mascotaProcesandoId === m.id_mascota ? 'Procesando...' : 'Baja' }}
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pagination-row" *ngIf="!loading && mascotasFiltradas().length > 0">
+        <span>{{ rangoActual() }}</span>
+        <div class="pagination-actions">
+          <button class="ap-button ap-button-sm ap-button-secondary" [disabled]="paginaActual === 1" (click)="cambiarPagina(paginaActual - 1)">Anterior</button>
+          <button class="ap-button ap-button-sm" *ngFor="let pagina of paginas()" [class.ap-button-active]="paginaActual === pagina" (click)="cambiarPagina(pagina)">{{ pagina }}</button>
+          <button class="ap-button ap-button-sm ap-button-secondary" [disabled]="paginaActual === totalPaginas()" (click)="cambiarPagina(paginaActual + 1)">Siguiente</button>
+        </div>
+      </div>
+
+      <div class="empty-state" *ngIf="!loading && mascotasFiltradas().length === 0">
+        <strong>No hay mascotas para mostrar</strong>
+        Ajusta los filtros o registra una nueva mascota.
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="modal-backdrop-custom" *ngIf="mascotaEditada">
+  <section class="modal-card">
+    <header class="modal-header-clean">
+      <div>
+        <p class="eyebrow">{{ esNuevo ? 'Registro' : 'Edicion' }}</p>
+        <h2>{{ esNuevo ? 'Nueva mascota' : mascotaEditada.nombre }}</h2>
+      </div>
+      <button class="ap-modal-close" (click)="cerrarEditor()"></button>
+    </header>
+
+    <p class="form-section-title">Datos principales</p>
+    <div class="ap-field-grid ap-mb-3">
+      <div class="ap-field ap-field-6">
+        <label class="ap-label">Nombre</label>
+        <input class="ap-input" [class.ap-invalid]="!mascotaEditada.nombre.trim()" [(ngModel)]="mascotaEditada.nombre" />
+      </div>
+      <div class="ap-field ap-field-6">
+        <label class="ap-label">Especie</label>
+        <select class="ap-select" [(ngModel)]="mascotaEditada.especie">
+          <option value="Perro">Perro</option>
+          <option value="Gato">Gato</option>
+        </select>
+      </div>
+      <div class="ap-field ap-field-6">
+        <label class="ap-label">Raza</label>
+        <input class="ap-input" [class.ap-invalid]="!mascotaEditada.raza.trim()" [(ngModel)]="mascotaEditada.raza" />
+      </div>
+      <div class="ap-field ap-field-3">
+        <label class="ap-label">Sexo</label>
+        <select class="ap-select" [(ngModel)]="mascotaEditada.sexo">
+          <option *ngFor="let sexo of sexos" [value]="sexo">{{ sexo }}</option>
+        </select>
+      </div>
+      <div class="ap-field ap-field-3">
+        <label class="ap-label">Años</label>
+        <input type="number" min="0" class="ap-input" [class.ap-invalid]="mascotaEditada.edad_anios < 0" [(ngModel)]="mascotaEditada.edad_anios" />
+      </div>
+      <div class="ap-field ap-field-3">
+        <label class="ap-label">Meses</label>
+        <input type="number" min="0" max="11" class="ap-input" [class.ap-invalid]="mascotaEditada.edad_meses < 0 || mascotaEditada.edad_meses > 11" [(ngModel)]="mascotaEditada.edad_meses" />
+      </div>
+    </div>
+
+    <p class="form-section-title">Estado y evidencia</p>
+    <div class="ap-field-grid">
+      <div class="ap-field ap-field-6">
+        <label class="ap-label">Estado salud</label>
+        <select class="ap-select" [(ngModel)]="mascotaEditada.est_salud">
+          <option *ngFor="let estado of estadosSalud" [value]="estado">{{ estado }}</option>
+        </select>
+      </div>
+      <div class="ap-field ap-field-6">
+        <label class="ap-label">Estado adopcion</label>
+        <select class="ap-select" [(ngModel)]="mascotaEditada.est_adopcion" [disabled]="!puedeEditarEstadoAdopcion()">
+          <option *ngFor="let estado of estadosAdopcion" [value]="estado">{{ estado }}</option>
+        </select>
+      </div>
+      <div class="ap-field ap-field-6">
+        <label class="ap-label">Esterilizacion</label>
+        <select class="ap-select" [(ngModel)]="mascotaEditada.estado_esterilizacion">
+          <option *ngFor="let estado of estadosEsterilizacion" [value]="estado">{{ estado }}</option>
+        </select>
+      </div>
+      <div class="ap-field ap-field-12">
+        <label class="ap-label">Foto</label>
+        <input type="file" class="ap-input" accept="image/*" (change)="onFileSelected($event)" />
+      </div>
+      <div class="ap-field ap-field-12">
+        <label class="ap-label">Observaciones</label>
+        <textarea class="ap-textarea" rows="3" maxlength="500" placeholder="Ej. Sociable con niños, esterilizacion pendiente por edad, requiere seguimiento..." [(ngModel)]="mascotaEditada.observaciones"></textarea>
+      </div>
+    </div>
+
+    <footer class="modal-actions">
+      <button class="ap-button ap-button-secondary" (click)="cerrarEditor()">Cancelar</button>
+      <button class="ap-button ap-button-primary" [disabled]="guardando || !formularioMascotaValido()" (click)="guardar()">
+        {{ guardando ? 'Guardando...' : 'Guardar' }}
+      </button>
+    </footer>
+  </section>
+</div>

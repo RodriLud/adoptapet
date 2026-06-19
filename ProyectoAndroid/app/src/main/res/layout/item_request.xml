@@ -2,57 +2,82 @@
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Widget.AdoptaPet.Card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/espacio_medio"
-    app:cardCornerRadius="18dp"
-    app:cardElevation="3dp"
-    app:strokeColor="@color/color_borde"
-    app:strokeWidth="1dp">
+    android:layout_marginBottom="@dimen/espacio_medio">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:padding="@dimen/espacio_medio">
 
-        <TextView
-            android:id="@+id/txtPetName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Solicitud para Luna"
-            android:textColor="@color/color_texto"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+        <ImageView
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@drawable/bg_chip_purple"
+            android:contentDescription="@string/nav_requests"
+            android:padding="10dp"
+            android:src="@drawable/ic_nav_requests"
+            app:tint="@color/color_principal" />
 
-        <TextView
-            android:id="@+id/txtApplicant"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Solicitante: María López"
-            android:textColor="@color/color_texto_secundario"
-            android:textSize="15sp" />
+            android:layout_marginStart="@dimen/espacio_medio"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/txtDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Fecha: 06/06/2026"
-            android:textColor="@color/color_texto_secundario"
-            android:textSize="15sp" />
+            <TextView
+                android:id="@+id/txtPetName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/sample_request_title"
+                android:textColor="@color/color_texto"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/txtStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/espacio_pequeno"
-            android:background="@color/color_principal_claro"
-            android:padding="8dp"
-            android:text="Pendiente"
-            android:textColor="@color/color_principal"
-            android:textStyle="bold" />
+            <TextView
+                android:id="@+id/txtApplicant"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/sample_request_applicant"
+                android:textColor="@color/color_texto_secundario"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/txtDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="@string/sample_request_date"
+                android:textColor="@color/color_texto_secundario"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/txtStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/espacio_pequeno"
+                android:background="@drawable/bg_chip_purple"
+                android:paddingStart="12dp"
+                android:paddingTop="6dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="6dp"
+                android:text="@string/sample_status_pending"
+                android:textColor="@color/color_principal"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:contentDescription="@string/request_detail_title"
+            android:src="@drawable/ic_chevron_right" />
 
     </LinearLayout>
 

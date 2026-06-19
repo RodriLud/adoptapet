@@ -1,0 +1,94 @@
+# ==================== IDE ====================
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+*.sublime-workspace
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+.kotlin/
+.gradle/
+.factorypath
+
+# ==================== OS ====================
+.DS_Store
+Thumbs.db
+.AppleDouble
+.LSOverride
+*.swp
+*.swo
+*~
+
+# ==================== IDE Caches ====================
+/.idea/caches/
+/.idea/libraries/
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.json
+/.idea/assetWizardSettings.xml
+/.idea/jarRepositories.xml
+/.idea/dictionaries
+/.idea/shelf
+
+# ==================== Backend (Spring Boot) ====================
+proyecto-adoptapet/adoptapet-backend/target/
+proyecto-adoptapet/adoptapet-backend/.mvn/wrapper/maven-wrapper.jar
+proyecto-adoptapet/adoptapet-backend/.apt_generated/
+proyecto-adoptapet/adoptapet-backend/hs_err_pid*.log
+proyecto-adoptapet/adoptapet-backend/nbproject/
+proyecto-adoptapet/adoptapet-backend/build/
+
+# ==================== Frontend (Angular) ====================
+proyecto-adoptapet/adoptapet-frontend/dist/
+proyecto-adoptapet/adoptapet-frontend/node_modules/
+proyecto-adoptapet/adoptapet-frontend/.angular/
+proyecto-adoptapet/adoptapet-frontend/npm-debug.log
+proyecto-adoptapet/adoptapet-frontend/yarn-error.log
+proyecto-adoptapet/adoptapet-frontend/yarn.lock
+proyecto-adoptapet/adoptapet-frontend/coverage/
+proyecto-adoptapet/adoptapet-frontend/.sass-cache/
+proyecto-adoptapet/adoptapet-frontend/.history/
+
+# ==================== Android ====================
+ProyectoAndroid/.gradle/
+ProyectoAndroid/build/
+ProyectoAndroid/app/build/
+ProyectoAndroid/.kotlin/
+ProyectoAndroid/local.properties
+ProyectoAndroid/.cxx/
+ProyectoAndroid/.externalNativeBuild
+ProyectoAndroid/captures/
+ProyectoAndroid/gradlew
+ProyectoAndroid/gradlew.bat
+ProyectoAndroid/gradle/wrapper/gradle-wrapper.jar
+ProyectoAndroid/*.jks
+ProyectoAndroid/*.keystore
+
+# ==================== Common ====================
+*.log
+*.tmp
+*.bak
+*.swp
+.env
+.env.local
+*.pid
+dist/
+build/
+temp/
+tmp/
+aapt2-out/
+
+# ==================== Project Specific ====================
+*.docx
+*.doc
+acta_test_http.pdf
+fotos_mascotas/
+uploads/
+google-services.json
+com.google.android.gms.json
+firebase-config.json

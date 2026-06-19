@@ -9,5 +9,9 @@ data class Pet(
     val size: String,
     val sterilized: Boolean,
     val description: String,
-    val imageRes: Int
+    val imageRes: Int,
+    val imageUrl: String? = null,
+    val breed: String = "",
+    val healthStatus: String = "",
+    val adoptionStatus: String = "DISPONIBLE"
 )

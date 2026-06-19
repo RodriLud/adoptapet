@@ -1,0 +1,150 @@
+<main class="admin-shell">
+  <app-sidebar />
+
+  <section class="content-area">
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">Evaluacion</p>
+        <h1>Solicitudes</h1>
+      </div>
+      <div class="filter-row">
+        <button class="ap-button ap-button-sm" [class.ap-button-active]="grupoEstados === 'ACTIVAS' && !filtroEstado" (click)="cambiarGrupoEstados('ACTIVAS')">Trabajo actual</button>
+        <button class="ap-button ap-button-sm" [class.ap-button-active]="grupoEstados === 'HISTORIAL' && !filtroEstado" (click)="cambiarGrupoEstados('HISTORIAL')">Historial</button>
+        <button class="ap-button ap-button-sm" [class.ap-button-active]="grupoEstados === 'TODAS' && !filtroEstado" (click)="cambiarGrupoEstados('TODAS')">Todas</button>
+      </div>
+    </header>
+
+    <div class="table-panel">
+      <div class="toolbar-panel">
+        <div class="section-kicker">
+          <div>
+            <h2>Bandeja de evaluación</h2>
+            <span>{{ solicitudesFiltradas().length }} solicitudes visibles</span>
+          </div>
+          <span class="status status-pending" *ngIf="grupoEstados === 'ACTIVAS' && !filtroEstado">Trabajo actual</span>
+        </div>
+
+        <div class="list-tools">
+          <input class="ap-input search-input" type="search" placeholder="Buscar por adoptante, correo o mascota" [(ngModel)]="busqueda" (ngModelChange)="alCambiarBusqueda()" />
+          <div class="delivery-filter">
+            <label class="ap-label" for="fecha-entrega-filtro">Entrega programada</label>
+            <div class="delivery-filter-control">
+              <input id="fecha-entrega-filtro" class="ap-input" type="date" [(ngModel)]="filtroFechaEntrega" (ngModelChange)="alCambiarFechaEntrega()" />
+              <button class="ap-button ap-button-sm ap-button-secondary" type="button" *ngIf="filtroFechaEntrega" (click)="limpiarFiltroFechaEntrega()">Limpiar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-row status-filter">
+          <button class="ap-button ap-button-sm" [class.ap-button-active]="!filtroEstado" (click)="cargarSolicitudes('')">Resumen</button>
+          <button class="ap-button ap-button-sm" *ngFor="let estado of estadosVisibles()" [class.ap-button-active]="filtroEstado === estado.value" (click)="cambiarEstado(estado.value)">
+            {{ estado.label }}
+          </button>
+        </div>
+      </div>
+
+      <div class="skeleton-list" *ngIf="loading" aria-label="Cargando solicitudes">
+        <span class="skeleton-row"></span>
+        <span class="skeleton-row"></span>
+        <span class="skeleton-row"></span>
+      </div>
+
+      <div class="ap-table-wrap" *ngIf="!loading">
+        <table class="ap-table">
+          <thead>
+            <tr>
+              <th>Adoptante</th>
+              <th>Mascota</th>
+              <th>Fechas</th>
+              <th>Estado</th>
+              <th class="ap-text-end">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let s of solicitudesPaginadas()" [class.priority-row]="esPrioritaria(s)">
+              <td>
+                <strong>{{ s.adoptante?.nom_adoptante }} {{ s.adoptante?.ape_adoptante }}</strong>
+                <small class="ap-block ap-muted">{{ s.adoptante?.email }}</small>
+              </td>
+              <td>{{ s.mascota?.nombre }}</td>
+              <td>
+                <span>{{ s.fecha_registro | date: 'dd/MM/yyyy' }}</span>
+                <small class="ap-block ap-muted" *ngIf="s.programacionEntrega?.fecha_entrega">
+                  Entrega {{ s.programacionEntrega?.fecha_entrega | date: 'dd/MM/yyyy' }}
+                </small>
+              </td>
+              <td><span class="status" [ngClass]="statusClass(s.estado_solicitud)">{{ s.estado_solicitud }}</span></td>
+              <td class="ap-text-end">
+                <div class="action-cluster">
+                  <a class="ap-button ap-button-sm ap-button-secondary" [routerLink]="['/solicitudes/detalle', s.id_solicitud]">Detalle</a>
+                  <button class="ap-button ap-button-sm ap-button-success-outline" *ngIf="s.estado_solicitud === 'PENDIENTE'" (click)="aprobar(s)">Aprobar</button>
+                  <button class="ap-button ap-button-sm ap-button-danger-outline" *ngIf="s.estado_solicitud === 'PENDIENTE'" (click)="rechazar(s)">Rechazar</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pagination-row" *ngIf="!loading && solicitudesFiltradas().length > 0">
+        <span>{{ rangoActual() }}</span>
+        <div class="pagination-actions">
+          <button class="ap-button ap-button-sm ap-button-secondary" [disabled]="paginaActual === 1" (click)="cambiarPagina(paginaActual - 1)">Anterior</button>
+          <button class="ap-button ap-button-sm" *ngFor="let pagina of paginas()" [class.ap-button-active]="paginaActual === pagina" (click)="cambiarPagina(pagina)">{{ pagina }}</button>
+          <button class="ap-button ap-button-sm ap-button-secondary" [disabled]="paginaActual === totalPaginas()" (click)="cambiarPagina(paginaActual + 1)">Siguiente</button>
+        </div>
+      </div>
+
+      <div class="empty-state" *ngIf="!loading && solicitudesFiltradas().length === 0">
+        <strong>No hay solicitudes para mostrar</strong>
+        Cambia el grupo, limpia filtros o espera nuevas solicitudes desde la app.
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="modal-overlay" *ngIf="modalAccion">
+  <section class="modal-content-custom">
+    <header class="modal-header-clean">
+      <div>
+        <p class="eyebrow">Gestion solicitud</p>
+        <h2 *ngIf="modalAccion === 'aprobar'">Programar entrega</h2>
+        <h2 *ngIf="modalAccion === 'rechazar'">Motivo de rechazo</h2>
+      </div>
+      <button class="ap-modal-close" type="button" [disabled]="procesandoAccion" (click)="cerrarModal()"></button>
+    </header>
+
+    <div class="modal-body-clean" *ngIf="modalAccion === 'aprobar'">
+      <label class="ap-label">Fecha de entrega</label>
+      <input class="ap-input ap-mb-3" type="date" [(ngModel)]="programacionForm.fecha_entrega" (change)="actualizarFechaEntrega()" />
+
+      <label class="ap-label">Horario</label>
+      <select class="ap-select ap-mb-3" [(ngModel)]="programacionForm.horario" (change)="actualizarLimitePorHorario()">
+        <option *ngFor="let horario of horariosVisibles()" [value]="valorHorario(horario)" [disabled]="!horario.disponible">{{ etiquetaHorario(horario) }}</option>
+      </select>
+      <div class="availability-note ap-mb-3" *ngIf="cargandoHorarios">Consultando cupos...</div>
+      <div class="availability-note ap-mb-3" *ngIf="!cargandoHorarios && sinHorariosDisponibles()">No hay cupos disponibles para esta fecha.</div>
+
+      <label class="ap-label">Fecha limite de cierre</label>
+      <input class="ap-input ap-mb-3" type="datetime-local" [(ngModel)]="programacionForm.fecha_limite_recojo" />
+
+      <label class="ap-label">Observacion</label>
+      <textarea class="ap-textarea" rows="3" [(ngModel)]="programacionForm.observacion"></textarea>
+    </div>
+
+    <div class="modal-body-clean" *ngIf="modalAccion === 'rechazar'">
+      <label class="ap-label">Motivo</label>
+      <textarea class="ap-textarea" rows="4" [(ngModel)]="motivoForm"></textarea>
+    </div>
+
+    <footer class="modal-actions">
+      <button class="ap-button ap-button-secondary" type="button" [disabled]="procesandoAccion" (click)="cerrarModal()">Cancelar</button>
+      <button class="ap-button ap-button-primary" type="button" *ngIf="modalAccion === 'aprobar'" [disabled]="procesandoAccion" (click)="confirmarAprobacion()">
+        {{ procesandoAccion ? 'Aprobando...' : 'Aprobar y programar' }}
+      </button>
+      <button class="ap-button ap-button-danger" type="button" *ngIf="modalAccion === 'rechazar'" [disabled]="procesandoAccion" (click)="confirmarRechazo()">
+        {{ procesandoAccion ? 'Rechazando...' : 'Rechazar' }}
+      </button>
+    </footer>
+  </section>
+</div>

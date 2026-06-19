@@ -1,7 +1,16 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
     <style name="Base.Theme.AdoptaPet" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorPrimary">@color/color_principal</item>
+        <item name="colorPrimaryContainer">@color/color_principal_claro</item>
+        <item name="colorSecondary">@color/color_acento</item>
+        <item name="colorSurface">@color/color_superficie</item>
+        <item name="colorOnSurface">@color/color_texto</item>
+        <item name="android:textColorPrimary">@color/color_texto</item>
+        <item name="android:textColorSecondary">@color/color_texto_secundario</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:navigationBarColor">@color/color_principal_oscuro</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:statusBarColor">@color/color_principal_oscuro</item>
     </style>
 </resources>

@@ -1,0 +1,15 @@
+:host {
+  display: block;
+}
+
+.modal-card {
+  width: min(760px, 100%);
+}
+
+.status-filter {
+  padding-bottom: 2px;
+}
+
+.pet-meta {
+  color: #59645e !important;
+}

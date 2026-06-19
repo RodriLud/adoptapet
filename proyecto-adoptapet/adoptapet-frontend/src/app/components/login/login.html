@@ -1,0 +1,43 @@
+<main class="login-container">
+  <section class="login-card">
+    <div class="login-card-body ap-pad-lg">
+      <div class="ap-center ap-mb-4">
+        <div class="brand-mark ap-mb-3">AP</div>
+        <h1 class="login-title">AdoptaPet</h1>
+        <p class="ap-muted ap-mb-0">Portal administrativo</p>
+      </div>
+
+      <form (ngSubmit)="onLogin()" #loginForm="ngForm">
+        <div class="ap-mb-3">
+          <label class="ap-label text-secondary">Usuario</label>
+          <input
+            type="text"
+            [(ngModel)]="credentials.username"
+            name="username"
+            class="ap-input ap-input-lg"
+            autocomplete="username"
+            required
+          />
+        </div>
+
+        <div class="ap-mb-3">
+          <label class="ap-label text-secondary">Contrasena</label>
+          <input
+            type="password"
+            [(ngModel)]="credentials.password"
+            name="password"
+            class="ap-input ap-input-lg"
+            autocomplete="current-password"
+            required
+          />
+        </div>
+
+        <div class="ap-alert" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+        <button type="submit" class="ap-button ap-button-primary ap-button-lg ap-button-block" [disabled]="loginForm.invalid">
+          Ingresar
+        </button>
+      </form>
+    </div>
+  </section>
+</main>

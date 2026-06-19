@@ -12,5 +12,12 @@ data class AdoptionRequest(
     val hasExperience: String,
     val reason: String,
     val date: String,
-    var status: String
+    var status: String,
+    val rejectionReason: String? = null,
+    val deliveryDate: String? = null,
+    val deliveryStart: String? = null,
+    val deliveryEnd: String? = null,
+    val pickupLimit: String? = null,
+    val scheduleStatus: String? = null,
+    val comments: String? = null
 )

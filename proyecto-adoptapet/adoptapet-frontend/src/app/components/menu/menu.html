@@ -1,0 +1,107 @@
+<main class="admin-shell">
+  <app-sidebar />
+
+  <section class="content-area">
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">Operacion diaria</p>
+        <h1>Dashboard</h1>
+      </div>
+      <div class="user-chip">
+        <span>{{ username }}</span>
+        <small>Rol: {{ roleLabel }}</small>
+      </div>
+    </header>
+
+    <div class="summary-grid">
+      <article class="metric-card metric-shelter">
+        <span>Mascotas registradas</span>
+        <strong>{{ totalMascotas }}</strong>
+        <p>Inventario activo del refugio</p>
+      </article>
+      <article class="metric-card metric-ready">
+        <span>Disponibles</span>
+        <strong>{{ disponibles }}</strong>
+        <p>Listas para iniciar adopcion</p>
+      </article>
+      <article class="metric-card metric-attention">
+        <span>Solicitudes pendientes</span>
+        <strong>{{ pendientes }}</strong>
+        <p>Requieren revision del equipo</p>
+      </article>
+      <article class="metric-card metric-reserved">
+        <span>Reservadas</span>
+        <strong>{{ reservadas }}</strong>
+        <p>Mascotas con proceso en curso</p>
+      </article>
+    </div>
+
+    <section class="operations-grid">
+      <article class="detail-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Prioridad</p>
+            <h2>Solicitudes por atender</h2>
+          </div>
+          <button class="ap-button ap-button-sm ap-button-primary" type="button" (click)="irSolicitudes()">Ver bandeja</button>
+        </div>
+
+        <div class="task-list" *ngIf="solicitudesPendientes.length; else sinPendientes">
+          <button class="task-item priority-task" type="button" *ngFor="let solicitud of solicitudesPendientes" (click)="verDetalle(solicitud.id_solicitud)">
+            <span>
+              <strong>{{ solicitud.adoptante?.nom_adoptante }} {{ solicitud.adoptante?.ape_adoptante }}</strong>
+              <small>{{ solicitud.mascota?.nombre || 'Mascota sin dato' }} - {{ solicitud.fecha_registro || 'Sin fecha' }}</small>
+            </span>
+            <i>Revisar</i>
+          </button>
+        </div>
+
+        <ng-template #sinPendientes>
+          <div class="empty-state compact">No hay solicitudes pendientes.</div>
+        </ng-template>
+      </article>
+
+      <aside class="detail-panel action-panel">
+        <p class="eyebrow">Accesos rapidos</p>
+        <h2>Gestion operativa</h2>
+        <button class="action-button" type="button" (click)="irMascotas()"><span>Inventario</span>Gestionar mascotas</button>
+        <button class="action-button" type="button" (click)="irRegistrarMascota()"><span>Ingreso</span>Registrar mascota</button>
+        <button class="action-button" type="button" (click)="irSolicitudes()"><span>Revision</span>Revisar solicitudes</button>
+        <button class="action-button" type="button" *ngIf="rol === 'ROLE_ADMIN'" (click)="irTrabajadores()"><span>Equipo</span>Gestionar trabajadores</button>
+      </aside>
+    </section>
+
+    <section class="detail-panel ap-mt-3">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Estado general</p>
+          <h2>Resumen de trabajo</h2>
+        </div>
+        <span class="status status-muted">{{ pendientes + aprobadas + noAsistio }} casos activos</span>
+      </div>
+
+      <div class="workflow-grid">
+        <div>
+          <span>Pendientes</span>
+          <strong>{{ pendientes }}</strong>
+        </div>
+        <div>
+          <span>Aprobadas</span>
+          <strong>{{ aprobadas }}</strong>
+        </div>
+        <div>
+          <span>No asistio</span>
+          <strong>{{ noAsistio }}</strong>
+        </div>
+        <div>
+          <span>Finalizadas</span>
+          <strong>{{ finalizadas }}</strong>
+        </div>
+        <div>
+          <span>No concretadas</span>
+          <strong>{{ rechazadas + canceladas }}</strong>
+        </div>
+      </div>
+    </section>
+  </section>
+</main>

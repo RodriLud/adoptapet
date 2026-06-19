@@ -1,43 +1,71 @@
 package com.cibertec.adoptapet.data
 
-import com.cibertec.adoptapet.R
+import android.content.Context
+import com.cibertec.adoptapet.database.MascotaDao
+import com.cibertec.adoptapet.models.Mascota
 import com.cibertec.adoptapet.models.Pet
+import com.cibertec.adoptapet.network.ApiClient
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 object PetRepository {
 
-    val pets = listOf(
-        Pet(
-            id = 1,
-            name = "Luna",
-            type = "Perro",
-            age = "2 años",
-            gender = "Hembra",
-            size = "Tamaño mediano",
-            sterilized = true,
-            description = "Luna es una perrita cariñosa, juguetona y muy leal. Le encanta correr en el parque y recibir muchos mimos.",
-            imageRes = R.drawable.kitten1
-        ),
-        Pet(
-            id = 2,
-            name = "Michi",
-            type = "Gato",
-            age = "1 año",
-            gender = "Macho",
-            size = "Tamaño pequeño",
-            sterilized = false,
-            description = "Michi es tranquilo, curioso y muy cariñoso.",
-            imageRes = R.drawable.kitten1
-        ),
-        Pet(
-            id = 3,
-            name = "Rocky",
-            type = "Perro",
-            age = "3 años",
-            gender = "Macho",
-            size = "Tamaño grande",
-            sterilized = false,
-            description = "Rocky es activo, protector y muy sociable.",
-            imageRes = R.drawable.kitten1
-        )
-    )
+    var pets: List<Pet> = emptyList()
+        private set
+
+    fun cargarMascotas(context: Context, callback: (List<Pet>, Boolean) -> Unit) {
+        ApiClient.mascotaService().listarMascotas().enqueue(object : Callback<List<Mascota>> {
+            override fun onResponse(
+                call: Call<List<Mascota>>,
+                response: Response<List<Mascota>>
+            ) {
+                val mascotas = response.body()
+                    .orEmpty()
+                    .filter { it.estaDisponible() }
+                    .map { it.toPet() }
+
+                if (response.isSuccessful && mascotas.isNotEmpty()) {
+                    pets = mascotas
+                    MascotaDao(context).guardarMascotas(mascotas)
+                    callback(mascotas, true)
+                } else {
+                    cargarDesdeSqlite(context, callback)
+                }
+            }
+
+            override fun onFailure(call: Call<List<Mascota>>, t: Throwable) {
+                cargarDesdeSqlite(context, callback)
+            }
+        })
+    }
+
+    fun buscarMascota(context: Context, id: Int, callback: (Pet?) -> Unit) {
+        pets.find { it.id == id }?.let {
+            callback(it)
+            return
+        }
+
+        val local = MascotaDao(context).buscarPorId(id)
+        if (local != null) {
+            callback(local)
+            return
+        }
+
+        ApiClient.mascotaService().buscarMascota(id).enqueue(object : Callback<Mascota> {
+            override fun onResponse(call: Call<Mascota>, response: Response<Mascota>) {
+                callback(response.body()?.toPet())
+            }
+
+            override fun onFailure(call: Call<Mascota>, t: Throwable) {
+                callback(null)
+            }
+        })
+    }
+
+    private fun cargarDesdeSqlite(context: Context, callback: (List<Pet>, Boolean) -> Unit) {
+        val locales = MascotaDao(context).listarMascotas()
+        pets = locales
+        callback(locales, false)
+    }
 }

@@ -34,11 +34,15 @@ class FavoritesFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        petAdapter = PetAdapter(FavoritesRepository.obtenerFavoritos()) { pet ->
-            val intent = Intent(requireContext(), PetDetailActivity::class.java)
-            intent.putExtra("petId", pet.id)
-            startActivity(intent)
-        }
+        petAdapter = PetAdapter(
+            pets = FavoritesRepository.obtenerFavoritos(),
+            onItemClick = { pet ->
+                val intent = Intent(requireContext(), PetDetailActivity::class.java)
+                intent.putExtra("petId", pet.id)
+                startActivity(intent)
+            },
+            onFavoritoChanged = { actualizarVista() }
+        )
 
         binding.rvFavoritos.layoutManager = LinearLayoutManager(requireContext())
         binding.rvFavoritos.adapter = petAdapter

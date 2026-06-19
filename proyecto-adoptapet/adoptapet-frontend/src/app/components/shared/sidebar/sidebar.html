@@ -1,0 +1,21 @@
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <span class="brand-mark">AP</span>
+    <div>
+      <strong>AdoptaPet</strong>
+      <small>Portal web</small>
+      <span class="sidebar-role">{{ roleLabel }}</span>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a routerLink="/dashboard" routerLinkActive="active" *ngIf="puedeVerPortal"><span class="nav-token">D</span>Dashboard</a>
+    <a routerLink="/mascotas" routerLinkActive="active" *ngIf="puedeVerPortal"><span class="nav-token">M</span>Mascotas</a>
+    <a routerLink="/solicitudes" routerLinkActive="active" *ngIf="puedeVerPortal"><span class="nav-token">S</span>Solicitudes</a>
+    <a routerLink="/adoptantes" routerLinkActive="active" *ngIf="puedeVerPortal"><span class="nav-token">A</span>Adoptantes</a>
+    <a routerLink="/trabajadores" routerLinkActive="active" *ngIf="rol === 'ROLE_ADMIN'"><span class="nav-token">T</span>Trabajadores</a>
+    <a routerLink="/reportes" routerLinkActive="active" *ngIf="rol === 'ROLE_ADMIN'"><span class="nav-token">R</span>Reportes</a>
+  </nav>
+
+  <button class="ap-button ap-button-light ap-full ap-mt-auto" type="button" (click)="logout()">Cerrar sesion</button>
+</aside>

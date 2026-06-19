@@ -1,0 +1,196 @@
+<main class="admin-shell">
+  <app-sidebar />
+
+  <section class="content-area">
+    <header class="page-header request-header">
+      <div>
+        <p class="eyebrow">Detalle solicitud</p>
+        <h1>Solicitud N°{{ solicitud?.id_solicitud }}</h1>
+      </div>
+      <div class="action-cluster">
+        <span class="status" [ngClass]="statusClass(solicitud.estado_solicitud)" *ngIf="solicitud">{{ solicitud.estado_solicitud }}</span>
+        <a class="ap-button ap-button-secondary" routerLink="/solicitudes">Volver</a>
+      </div>
+    </header>
+
+    <div class="skeleton-list" *ngIf="loading" aria-label="Cargando detalle de solicitud">
+      <span class="skeleton-row"></span>
+      <span class="skeleton-row"></span>
+      <span class="skeleton-row"></span>
+    </div>
+
+    <div class="detail-grid request-detail-grid" *ngIf="!loading && solicitud">
+      <section class="detail-panel request-panel">
+        <h2>Adoptante</h2>
+        <p class="main-name">{{ solicitud.adoptante?.nom_adoptante }} {{ solicitud.adoptante?.ape_adoptante }}</p>
+        <div class="info-list">
+          <p><span>DNI</span>{{ solicitud.adoptante?.dni }}</p>
+          <p><span>Email</span>{{ solicitud.adoptante?.email }}</p>
+          <p><span>Telefono</span>{{ solicitud.adoptante?.telefono }}</p>
+          <p><span>Direccion</span>{{ solicitud.adoptante?.direccion }}</p>
+        </div>
+      </section>
+
+      <section class="detail-panel request-panel" *ngIf="historialAdoptante">
+        <h2>Historial adoptante</h2>
+        <div class="history-summary">
+          <div>
+            <span>Solicitudes</span>
+            <strong>{{ historialAdoptante.total_solicitudes || 0 }}</strong>
+          </div>
+          <div>
+            <span>Finalizadas</span>
+            <strong>{{ historialAdoptante.finalizadas || 0 }}</strong>
+          </div>
+          <div>
+            <span>No asistio</span>
+            <strong>{{ historialAdoptante.no_asistio || 0 }}</strong>
+          </div>
+          <div>
+            <span>Canceladas</span>
+            <strong>{{ historialAdoptante.canceladas || 0 }}</strong>
+          </div>
+        </div>
+        <a class="ap-button ap-button-secondary ap-full ap-mt-2" [routerLink]="['/adoptantes', solicitud.adoptante?.id_usuario]">Ver historial completo</a>
+      </section>
+
+      <section class="detail-panel request-panel">
+        <h2>Mascota</h2>
+        <p class="main-name">{{ solicitud.mascota?.nombre }}</p>
+        <div class="info-list">
+          <p><span>Especie</span>{{ solicitud.mascota?.especie }} - {{ solicitud.mascota?.raza }}</p>
+          <p><span>Salud</span>{{ solicitud.mascota?.est_salud }}</p>
+          <p><span>Adopcion</span>{{ solicitud.mascota?.est_adopcion }}</p>
+        </div>
+      </section>
+
+      <section class="detail-panel detail-panel-wide request-panel form-panel">
+        <h2>Formulario digital</h2>
+        <dl class="form-review">
+          <dt>Motivo de adopcion</dt>
+          <dd>{{ solicitud.motivo_adopcion || '-' }}</dd>
+          <dt>Tipo de vivienda</dt>
+          <dd>{{ solicitud.tipo_vivienda || '-' }}</dd>
+          <dt>Experiencia con mascotas</dt>
+          <dd>{{ solicitud.experiencia_mascotas || '-' }}</dd>
+          <dt>Otras mascotas</dt>
+          <dd>{{ solicitud.otras_mascotas || '-' }}</dd>
+          <dt>Personas en el hogar</dt>
+          <dd>{{ solicitud.cantidad_personas_hogar ?? '-' }}</dd>
+          <dt>Comentarios adicionales</dt>
+          <dd>{{ solicitud.comentarios_adicionales || solicitud.comentario || '-' }}</dd>
+        </dl>
+      </section>
+
+      <section class="detail-panel request-panel">
+        <h2>Adjuntos</h2>
+        <button class="ap-button ap-button-secondary ap-full ap-mb-2" [disabled]="!solicitud.ruta_dni" (click)="abrirAdjunto(solicitud.ruta_dni)">Ver DNI</button>
+        <button class="ap-button ap-button-secondary ap-full ap-mb-2" [disabled]="!solicitud.ruta_domicilio" (click)="abrirAdjunto(solicitud.ruta_domicilio)">Ver domicilio</button>
+        <button class="ap-button ap-button-secondary ap-full ap-mb-2" [disabled]="!solicitud.acta_pdf" (click)="abrirAdjunto(solicitud.acta_pdf)">Ver acta generada</button>
+        <button class="ap-button ap-button-secondary ap-full" [disabled]="!solicitud.ruta_acta_firmada" (click)="abrirAdjunto(solicitud.ruta_acta_firmada)">Ver acta firmada</button>
+      </section>
+
+      <section class="detail-panel request-panel" *ngIf="solicitud.programacionEntrega || solicitud.motivo_rechazo">
+        <h2>Seguimiento</h2>
+        <div class="info-list" *ngIf="solicitud.programacionEntrega">
+          <p><span>Entrega</span>{{ solicitud.programacionEntrega.fecha_entrega }}</p>
+          <p><span>Horario</span>{{ formatHora(solicitud.programacionEntrega.hora_inicio) }} - {{ formatHora(solicitud.programacionEntrega.hora_fin) }}</p>
+          <p><span>Limite cierre</span>{{ formatFechaHora(solicitud.programacionEntrega.fecha_limite_recojo) }}</p>
+          <p><span>Estado cita</span>{{ solicitud.programacionEntrega.estado_programacion }}</p>
+          <p *ngIf="solicitud.programacionEntrega.observacion"><span>Observación</span>{{ solicitud.programacionEntrega.observacion }}</p>
+          <p *ngIf="solicitud.programacionEntrega.motivo_cancelacion"><span>Motivo cancelacion</span>{{ solicitud.programacionEntrega.motivo_cancelacion }}</p>
+        </div>
+        <div class="info-list" *ngIf="solicitud.motivo_rechazo">
+          <p><span>Motivo rechazo</span>{{ solicitud.motivo_rechazo }}</p>
+        </div>
+        <div class="info-list" *ngIf="solicitud.motivo_contingencia">
+          <p><span>Contingencia</span>{{ solicitud.motivo_contingencia }}</p>
+          <p><span>Cierre excepcional</span>{{ formatFechaHora(solicitud.fecha_cierre_contingencia) }}</p>
+        </div>
+      </section>
+
+      <section class="detail-panel request-panel management-panel">
+        <div class="management-heading">
+          <div>
+            <p class="eyebrow">Estado actual</p>
+            <h2>Gestion</h2>
+          </div>
+          <span class="status" [ngClass]="statusClass(solicitud.estado_solicitud)">{{ solicitud.estado_solicitud }}</span>
+        </div>
+        <div class="soft-note ap-mb-2" *ngIf="alertaGestion()">{{ alertaGestion() }}</div>
+        <div class="soft-note ap-mb-2" *ngIf="alertaReprogramaciones()">{{ alertaReprogramaciones() }}</div>
+        <button class="ap-button ap-button-success ap-full ap-mb-2" *ngIf="solicitud.estado_solicitud === 'PENDIENTE'" [disabled]="!!procesandoAccion" (click)="aprobar()">Aprobar</button>
+        <button class="ap-button ap-button-danger-outline ap-full ap-mb-2" *ngIf="solicitud.estado_solicitud === 'PENDIENTE'" [disabled]="!!procesandoAccion" (click)="rechazar()">Rechazar</button>
+        <button class="ap-button ap-button-primary ap-full ap-mb-2" [disabled]="solicitud.estado_solicitud !== 'APROBADA' || !!procesandoAccion" (click)="generarDocumento()">
+          {{ procesandoAccion === 'documento' ? 'Generando...' : 'Generar acta' }}
+        </button>
+        <div class="signed-acta-box ap-mb-2" *ngIf="solicitud.estado_solicitud === 'APROBADA'">
+          <label class="ap-label">Acta firmada</label>
+          <div class="soft-note ap-mb-2" *ngIf="mensajeBloqueoActaFirmada()">{{ mensajeBloqueoActaFirmada() }}</div>
+          <input class="ap-input ap-mb-2" type="file" accept=".pdf,image/*" (change)="seleccionarActaFirmada($event)" />
+          <button class="ap-button ap-button-outline ap-full" type="button" [disabled]="!archivoActaFirmada || !puedeSubirActaFirmada() || !!procesandoAccion" (click)="subirActaFirmada()">
+            {{ procesandoAccion === 'acta' ? 'Subiendo...' : 'Subir acta firmada' }}
+          </button>
+        </div>
+        <button class="ap-button ap-button-success ap-full ap-mb-2" *ngIf="solicitud.estado_solicitud === 'APROBADA'" [disabled]="!puedeConfirmarEntrega() || !!procesandoAccion" (click)="finalizar()">
+          {{ procesandoAccion === 'finalizar' ? 'Confirmando...' : 'Confirmar entrega' }}
+        </button>
+        <button class="ap-button ap-button-warning ap-full ap-mb-2" *ngIf="solicitud.estado_solicitud === 'APROBADA'" [disabled]="!puedeFinalizarContingencia() || !!procesandoAccion" (click)="finalizarContingencia()">Finalizar por contingencia</button>
+        <div class="soft-note ap-mb-2" *ngIf="mensajeContingenciaVisible()">{{ mensajeContingenciaVisible() }}</div>
+        <button class="ap-button ap-button-warning-outline ap-full ap-mb-2" *ngIf="solicitud.estado_solicitud === 'APROBADA'" [disabled]="!!procesandoAccion" (click)="marcarNoAsistio()">
+          {{ procesandoAccion === 'no-asistio' ? 'Marcando...' : 'Marcar no asistio' }}
+        </button>
+        <button class="ap-button ap-button-outline ap-full ap-mb-2" *ngIf="solicitud.estado_solicitud === 'APROBADA' || solicitud.estado_solicitud === 'NO_ASISTIO'" [disabled]="!puedeReprogramar() || !!procesandoAccion" (click)="reprogramar()">Reprogramar cita</button>
+        <button class="ap-button ap-button-danger-outline ap-full" *ngIf="solicitud.estado_solicitud === 'APROBADA' || solicitud.estado_solicitud === 'NO_ASISTIO'" [disabled]="!!procesandoAccion" (click)="cancelar()">Cancelar definitivo</button>
+      </section>
+    </div>
+  </section>
+</main>
+
+<div class="modal-overlay" *ngIf="modalAccion">
+  <section class="modal-content-custom">
+    <header class="modal-header-clean">
+      <div>
+        <p class="eyebrow">Gestion solicitud</p>
+        <h2 *ngIf="modalAccion === 'aprobar'">Programar entrega</h2>
+        <h2 *ngIf="modalAccion === 'reprogramar'">Reprogramar cita</h2>
+        <h2 *ngIf="modalAccion === 'rechazar'">Motivo de rechazo</h2>
+        <h2 *ngIf="modalAccion === 'cancelar'">Motivo de cancelacion</h2>
+        <h2 *ngIf="modalAccion === 'contingencia'">Finalizar por contingencia</h2>
+      </div>
+      <button class="ap-modal-close" type="button" [disabled]="!!procesandoAccion" (click)="cerrarModal()"></button>
+    </header>
+
+    <div class="modal-body-clean" *ngIf="modalAccion === 'aprobar' || modalAccion === 'reprogramar'">
+      <label class="ap-label">Fecha de entrega</label>
+      <input class="ap-input ap-mb-3" type="date" [(ngModel)]="programacionForm.fecha_entrega" (change)="actualizarFechaEntrega()" />
+
+      <label class="ap-label">Horario</label>
+      <select class="ap-select ap-mb-3" [(ngModel)]="programacionForm.horario" (change)="actualizarLimitePorHorario()">
+        <option *ngFor="let horario of horariosVisibles()" [value]="valorHorario(horario)" [disabled]="!horario.disponible">{{ etiquetaHorario(horario) }}</option>
+      </select>
+      <div class="availability-note ap-mb-3" *ngIf="cargandoHorarios">Consultando cupos...</div>
+      <div class="availability-note ap-mb-3" *ngIf="!cargandoHorarios && sinHorariosDisponibles()">No hay cupos disponibles para esta fecha.</div>
+
+      <label class="ap-label">Fecha limite de cierre</label>
+      <input class="ap-input ap-mb-3" type="datetime-local" [(ngModel)]="programacionForm.fecha_limite_recojo" />
+
+      <label class="ap-label">Observacion</label>
+      <textarea class="ap-textarea" rows="3" [(ngModel)]="programacionForm.observacion"></textarea>
+    </div>
+
+    <div class="modal-body-clean" *ngIf="modalAccion === 'rechazar' || modalAccion === 'cancelar' || modalAccion === 'contingencia'">
+      <label class="ap-label">Motivo</label>
+      <textarea class="ap-textarea" rows="4" [(ngModel)]="motivoForm"></textarea>
+    </div>
+
+    <footer class="modal-actions">
+      <button class="ap-button ap-button-secondary" type="button" [disabled]="!!procesandoAccion" (click)="cerrarModal()">Cancelar</button>
+      <button class="ap-button ap-button-primary" type="button" *ngIf="modalAccion === 'aprobar'" [disabled]="!!procesandoAccion" (click)="confirmarAprobacion()">{{ procesandoAccion === 'aprobar' ? 'Aprobando...' : 'Aprobar y programar' }}</button>
+      <button class="ap-button ap-button-primary" type="button" *ngIf="modalAccion === 'reprogramar'" [disabled]="!!procesandoAccion" (click)="confirmarReprogramacion()">{{ procesandoAccion === 'reprogramar' ? 'Guardando...' : 'Guardar nueva cita' }}</button>
+      <button class="ap-button ap-button-danger" type="button" *ngIf="modalAccion === 'rechazar'" [disabled]="!!procesandoAccion" (click)="confirmarRechazo()">{{ procesandoAccion === 'rechazar' ? 'Rechazando...' : 'Rechazar' }}</button>
+      <button class="ap-button ap-button-danger" type="button" *ngIf="modalAccion === 'cancelar'" [disabled]="!!procesandoAccion" (click)="confirmarCancelacion()">{{ procesandoAccion === 'cancelar' ? 'Cancelando...' : 'Cancelar definitivo' }}</button>
+      <button class="ap-button ap-button-warning" type="button" *ngIf="modalAccion === 'contingencia'" [disabled]="!!procesandoAccion" (click)="confirmarContingencia()">{{ procesandoAccion === 'contingencia' ? 'Finalizando...' : 'Finalizar por contingencia' }}</button>
+    </footer>
+  </section>
+</div>

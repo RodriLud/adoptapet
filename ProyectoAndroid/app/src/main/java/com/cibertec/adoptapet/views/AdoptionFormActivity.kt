@@ -1,34 +1,76 @@
 package com.cibertec.adoptapet.views
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
+import com.cibertec.adoptapet.R
 import com.cibertec.adoptapet.data.PetRepository
+import com.cibertec.adoptapet.data.SessionManager
+import com.cibertec.adoptapet.database.SolicitudLocalDao
 import com.cibertec.adoptapet.databinding.ActivityAdoptionFormBinding
-import com.cibertec.adoptapet.models.AdoptionRequest
-import com.cibertec.adoptapet.utils.Validador
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import com.cibertec.adoptapet.models.Pet
+import com.cibertec.adoptapet.models.Solicitud
+import com.cibertec.adoptapet.network.ApiClient
+import com.cibertec.adoptapet.util.MultipartUtils
+import com.cibertec.adoptapet.util.SystemBarUtils
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class AdoptionFormActivity : AppCompatActivity() {
     private var _binding: ActivityAdoptionFormBinding? = null
     private val binding get() = _binding!!
     private var petId: Int = -1
+    private var mascota: Pet? = null
+    private var dniUri: Uri? = null
+    private var domicilioUri: Uri? = null
+    private lateinit var sessionManager: SessionManager
+    private lateinit var solicitudLocalDao: SolicitudLocalDao
+
+    private val seleccionarDniLauncher =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            if (uri != null) {
+                dniUri = uri
+                binding.btnArchivoDni.text = "DNI adjuntado"
+            }
+        }
+
+    private val seleccionarDomicilioLauncher =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            if (uri != null) {
+                domicilioUri = uri
+                binding.btnArchivoDomicilio.text = "Comprobante adjuntado"
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         _binding = ActivityAdoptionFormBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        SystemBarUtils.aplicarBarras(this)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.scrollFormulario) { view, insets ->
+            val barras = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updatePadding(bottom = barras.bottom + resources.getDimensionPixelSize(R.dimen.espacio_grande))
+            insets
+        }
 
         petId = intent.getIntExtra("petId", -1)
+        sessionManager = SessionManager(this)
+        solicitudLocalDao = SolicitudLocalDao(this)
 
         configurarToolbar()
         cargarMascota()
-        configurarDropdown()
+        configurarDropdowns()
+        configurarArchivos()
         configurarBoton()
     }
 
@@ -39,106 +81,180 @@ class AdoptionFormActivity : AppCompatActivity() {
     }
 
     private fun cargarMascota() {
-        val pet = PetRepository.pets.find { it.id == petId }
+        PetRepository.buscarMascota(this, petId) { pet ->
+            if (pet == null) {
+                Toast.makeText(this, "Mascota no encontrada", Toast.LENGTH_SHORT).show()
+                finish()
+                return@buscarMascota
+            }
 
-        if (pet == null) {
-            Toast.makeText(this, "Mascota no encontrada", Toast.LENGTH_SHORT).show()
-            finish()
-            return
+            mascota = pet
+            binding.tvMascotaFormulario.text = "Adoptar a ${pet.name}"
         }
-
-        binding.tvMascotaFormulario.text = "Adoptar a ${pet.name}"
     }
 
-    private fun configurarDropdown() {
-        val opciones = arrayOf("Si", "No")
-        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, opciones)
-        binding.autoCompleteExperiencia.setAdapter(adapter)
+    private fun configurarDropdowns() {
+        configurarAdapter(binding.autoCompleteMotivo, arrayOf("Compania familiar", "Soporte emocional", "Seguridad", "Ayuda social", "Otro"))
+        configurarAdapter(binding.autoCompleteVivienda, arrayOf("Casa", "Departamento", "Cuarto", "Condominio"))
+        configurarAdapter(binding.autoCompleteExperiencia, arrayOf("Ninguna", "Basica", "Experimentado"))
+        configurarAdapter(binding.autoCompleteOtrasMascotas, arrayOf("No", "Si"))
+    }
+
+    private fun configurarAdapter(view: android.widget.AutoCompleteTextView, opciones: Array<String>) {
+        val adapter = ArrayAdapter(this, R.layout.item_dropdown_option, opciones)
+        view.setAdapter(adapter)
+        view.setDropDownBackgroundResource(android.R.color.white)
+    }
+
+    private fun configurarArchivos() {
+        binding.btnArchivoDni.setOnClickListener {
+            seleccionarDniLauncher.launch("image/*")
+        }
+
+        binding.btnArchivoDomicilio.setOnClickListener {
+            seleccionarDomicilioLauncher.launch("image/*")
+        }
     }
 
     private fun configurarBoton() {
         binding.btnEnviarSolicitud.setOnClickListener {
             if (validarFormulario()) {
-                guardarSolicitud()
-
-                val intent = Intent(this, AdoptionSuccessActivity::class.java)
-                intent.putExtra("petId", petId)
-                startActivity(intent)
-                finish()
+                enviarSolicitud()
             }
         }
     }
 
-    private fun guardarSolicitud() {
-        val pet = PetRepository.pets.find { it.id == petId } ?: return
+    private fun enviarSolicitud() {
+        val pet = mascota ?: return
+        val idAdoptante = sessionManager.obtenerUserId()
+        val personas = binding.edtCantidadPersonas.text.toString().trim().toInt()
+        val comentarios = binding.edtMotivo.text.toString().trim()
+        val motivo = binding.autoCompleteMotivo.text.toString().trim()
+        val vivienda = binding.autoCompleteVivienda.text.toString().trim()
+        val experiencia = binding.autoCompleteExperiencia.text.toString().trim()
+        val otrasMascotas = binding.autoCompleteOtrasMascotas.text.toString().trim()
 
-        val fechaActual = SimpleDateFormat(
-            "dd/MM/yyyy",
-            Locale.getDefault()
-        ).format(Date())
-
-        val nuevaSolicitud = AdoptionRequest(
-            id = 1,
-            petId = pet.id,
-            petName = pet.name,
-            applicantName = binding.edtNombre.text.toString().trim(),
-            dni = binding.edtDni.text.toString().trim(),
-            phone = binding.edtTelefono.text.toString().trim(),
-            email = binding.edtCorreo.text.toString().trim(),
-            address = binding.edtDireccion.text.toString().trim(),
-            hasExperience = binding.autoCompleteExperiencia.text.toString(),
-            reason = binding.edtMotivo.text.toString().trim(),
-            date = fechaActual,
-            status = "Pendiente"
+        solicitudLocalDao.guardarBorrador(
+            idMascota = pet.id,
+            motivo = motivo,
+            vivienda = vivienda,
+            experiencia = experiencia,
+            otrasMascotas = otrasMascotas,
+            personas = personas,
+            comentarios = comentarios
         )
 
-        // TODO: Repositorio solicitud.guardar(nuevaSolicitud)
+        cambiarEstadoCarga(true)
+
+        val service = ApiClient.solicitudService(
+            sessionManager.obtenerUsername(),
+            sessionManager.obtenerPassword()
+        )
+
+        service.registrarSolicitud(
+            idAdoptante = MultipartUtils.texto(idAdoptante.toString()),
+            idMascota = MultipartUtils.texto(pet.id.toString()),
+            comentario = MultipartUtils.texto(comentarios),
+            motivoAdopcion = MultipartUtils.texto(motivo),
+            tipoVivienda = MultipartUtils.texto(vivienda),
+            experienciaMascotas = MultipartUtils.texto(experiencia),
+            otrasMascotas = MultipartUtils.texto(otrasMascotas),
+            cantidadPersonasHogar = MultipartUtils.texto(personas.toString()),
+            comentariosAdicionales = MultipartUtils.texto(comentarios),
+            archivoDni = MultipartUtils.archivo(this, "archivo_dni", dniUri),
+            archivoDomicilio = MultipartUtils.archivo(this, "archivo_domicilio", domicilioUri)
+        ).enqueue(object : Callback<Solicitud> {
+            override fun onResponse(call: Call<Solicitud>, response: Response<Solicitud>) {
+                cambiarEstadoCarga(false)
+
+                val solicitud = response.body()
+                if (!response.isSuccessful || solicitud == null) {
+                    Toast.makeText(this@AdoptionFormActivity, "No se pudo enviar la solicitud", Toast.LENGTH_LONG).show()
+                    return
+                }
+
+                solicitudLocalDao.guardarSolicitudPendiente(solicitud, pet.id, pet.name)
+
+                val intent = Intent(this@AdoptionFormActivity, AdoptionSuccessActivity::class.java)
+                intent.putExtra("petId", pet.id)
+                startActivity(intent)
+                finish()
+            }
+
+            override fun onFailure(call: Call<Solicitud>, t: Throwable) {
+                cambiarEstadoCarga(false)
+                Toast.makeText(
+                    this@AdoptionFormActivity,
+                    "Solicitud guardada como borrador. Reintenta cuando haya conexion.",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        })
     }
 
     private fun validarFormulario(): Boolean {
-        val nombre = binding.edtNombre.text.toString().trim()
-        val dni = binding.edtDni.text.toString().trim()
-        val telefono = binding.edtTelefono.text.toString().trim()
-        val correo = binding.edtCorreo.text.toString().trim()
-        val direccion = binding.edtDireccion.text.toString().trim()
-        val experiencia = binding.autoCompleteExperiencia.text.toString()
-        val motivo = binding.edtMotivo.text.toString().trim()
+        val idAdoptante = sessionManager.obtenerUserId()
+        val motivo = binding.autoCompleteMotivo.text.toString().trim()
+        val vivienda = binding.autoCompleteVivienda.text.toString().trim()
+        val experiencia = binding.autoCompleteExperiencia.text.toString().trim()
+        val otrasMascotas = binding.autoCompleteOtrasMascotas.text.toString().trim()
+        val cantidadPersonas = binding.edtCantidadPersonas.text.toString().trim()
+        val comentarios = binding.edtMotivo.text.toString().trim()
 
-        if (!Validador.textoMinimo(nombre, 3)) {
-            binding.edtNombre.error = "Nombre mínimo 3 caracteres"
+        if (idAdoptante <= 0) {
+            Toast.makeText(this, "Inicia sesion nuevamente", Toast.LENGTH_SHORT).show()
             return false
         }
 
-        if (!Validador.dniValido(dni)) {
-            binding.edtDni.error = "DNI debe tener 8 dígitos"
+        if (motivo.isEmpty()) {
+            Toast.makeText(this, "Selecciona el motivo de adopcion", Toast.LENGTH_SHORT).show()
             return false
         }
 
-        if (!Validador.telefonoValido(telefono)) {
-            binding.edtTelefono.error = "Teléfono debe tener 9 dígitos"
-            return false
-        }
-
-        if (!Validador.correoValido(correo)) {
-            binding.edtCorreo.error = "Correo no válido"
-            return false
-        }
-
-        if (!Validador.textoMinimo(direccion, 5)) {
-            binding.edtDireccion.error = "Dirección demasiado corta"
+        if (vivienda.isEmpty()) {
+            Toast.makeText(this, "Selecciona el tipo de vivienda", Toast.LENGTH_SHORT).show()
             return false
         }
 
         if (experiencia.isEmpty()) {
-            Toast.makeText(this, "Por favor seleccione si tiene experiencia", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Selecciona tu experiencia con mascotas", Toast.LENGTH_SHORT).show()
             return false
         }
 
-        if (!Validador.textoMinimo(motivo, 10)) {
-            binding.edtMotivo.error = "Explica mejor el motivo"
+        if (otrasMascotas.isEmpty()) {
+            Toast.makeText(this, "Indica si tienes otras mascotas", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        if (cantidadPersonas.isEmpty() || cantidadPersonas.toIntOrNull() == null) {
+            binding.edtCantidadPersonas.error = "Ingresa una cantidad valida"
+            return false
+        }
+
+        if (comentarios.length < 10) {
+            binding.edtMotivo.error = "Agrega un comentario de al menos 10 caracteres"
+            return false
+        }
+
+        if (dniUri == null) {
+            Toast.makeText(this, "Adjunta una foto de tu DNI", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        if (domicilioUri == null) {
+            Toast.makeText(this, "Adjunta el comprobante de domicilio", Toast.LENGTH_SHORT).show()
             return false
         }
 
         return true
+    }
+
+    private fun cambiarEstadoCarga(cargando: Boolean) {
+        binding.btnEnviarSolicitud.isEnabled = !cargando
+        binding.btnEnviarSolicitud.text = if (cargando) {
+            "Enviando..."
+        } else {
+            getString(R.string.adoption_form_send)
+        }
     }
 }

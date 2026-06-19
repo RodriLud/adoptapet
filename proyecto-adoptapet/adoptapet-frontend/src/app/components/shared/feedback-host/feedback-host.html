@@ -1,0 +1,34 @@
+<section class="toast-stack" aria-live="polite" aria-atomic="true">
+  <article class="toast-card" [ngClass]="'toast-' + toast.type" *ngFor="let toast of toasts$ | async">
+    <div>
+      <strong>{{ toast.title }}</strong>
+      <p *ngIf="toast.message">{{ toast.message }}</p>
+    </div>
+    <button class="toast-close" type="button" (click)="feedback.closeToast(toast.id)">Cerrar</button>
+  </article>
+</section>
+
+<div class="modal-backdrop-custom feedback-backdrop" *ngIf="confirm$ | async as confirm">
+  <section class="confirm-card">
+    <header>
+      <p class="eyebrow">Confirmacion</p>
+      <h2>{{ confirm.title }}</h2>
+    </header>
+    <p>{{ confirm.message }}</p>
+    <footer>
+      <button class="ap-button ap-button-secondary" type="button" (click)="feedback.answerConfirm(false)">
+        {{ confirm.cancelText }}
+      </button>
+      <button
+        class="ap-button"
+        [class.ap-button-primary]="confirm.tone === 'primary'"
+        [class.ap-button-danger]="confirm.tone === 'danger'"
+        [class.ap-button-warning]="confirm.tone === 'warning'"
+        type="button"
+        (click)="feedback.answerConfirm(true)"
+      >
+        {{ confirm.confirmText }}
+      </button>
+    </footer>
+  </section>
+</div>

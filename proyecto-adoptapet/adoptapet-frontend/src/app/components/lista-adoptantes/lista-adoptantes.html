@@ -1,0 +1,173 @@
+<main class="admin-shell">
+  <app-sidebar />
+
+  <section class="content-area">
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">Consulta</p>
+        <h1>Adoptantes</h1>
+      </div>
+    </header>
+
+    <div class="table-panel">
+      <div class="toolbar-panel">
+        <div class="section-kicker">
+          <div>
+            <h2>Base de adoptantes</h2>
+            <span>{{ adoptantesFiltrados().length }} perfiles visibles</span>
+          </div>
+          <span class="status status-activo">{{ activos() }} activos</span>
+        </div>
+
+        <div class="list-tools">
+          <input class="ap-input search-input" type="search" placeholder="Buscar por nombre, DNI, correo o telefono" [(ngModel)]="busqueda" (ngModelChange)="alCambiarFiltro()" />
+          <select class="ap-select compact-select" [(ngModel)]="filtroHistorial" (change)="alCambiarFiltro()">
+            <option *ngFor="let filtro of filtrosHistorial" [value]="filtro.value">{{ filtro.label }}</option>
+          </select>
+          <select class="ap-select compact-select" [(ngModel)]="filtroEstado" (change)="alCambiarFiltro()">
+            <option value="">Todos los estados</option>
+            <option value="ACTIVO">Activos</option>
+            <option value="INACTIVO">Inactivos</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="skeleton-list" *ngIf="loading" aria-label="Cargando adoptantes">
+        <span class="skeleton-row"></span>
+        <span class="skeleton-row"></span>
+        <span class="skeleton-row"></span>
+      </div>
+
+      <div class="ap-table-wrap" *ngIf="!loading">
+        <table class="ap-table">
+          <thead>
+            <tr>
+              <th>Adoptante</th>
+              <th>DNI</th>
+              <th>Contacto</th>
+              <th>Solicitudes</th>
+              <th>Estado</th>
+              <th>Ultima solicitud</th>
+              <th class="ap-text-end">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let adoptante of adoptantesPaginados()">
+              <td>
+                <strong>{{ nombreCompleto(adoptante) }}</strong>
+                <small class="ap-block ap-muted">{{ adoptante.direccion || '-' }}</small>
+              </td>
+              <td>{{ adoptante.dni || '-' }}</td>
+              <td>
+                <span>{{ adoptante.telefono || '-' }}</span>
+                <small class="ap-block ap-muted">{{ adoptante.email || '-' }}</small>
+              </td>
+              <td>
+                <span class="status status-blue">{{ adoptante.total_solicitudes || 0 }}</span>
+                <small class="ap-block ap-muted">{{ adoptante.finalizadas || 0 }} finalizadas</small>
+              </td>
+              <td><span class="status" [class.status-inactivo]="adoptante.activo === false" [class.status-activo]="adoptante.activo !== false">{{ adoptante.activo === false ? 'INACTIVO' : 'ACTIVO' }}</span></td>
+              <td>{{ adoptante.ultima_solicitud ? (adoptante.ultima_solicitud | date: 'dd/MM/yyyy') : '-' }}</td>
+              <td class="ap-text-end">
+                <div class="action-cluster">
+                  <button class="ap-button ap-button-sm ap-button-secondary" type="button" (click)="verDetalle(adoptante)">Historial</button>
+                  <button class="ap-button ap-button-sm ap-button-danger-outline" type="button" *ngIf="esAdmin() && adoptante.activo !== false" [disabled]="adoptanteProcesandoId === adoptante.id_adoptante" (click)="desactivar(adoptante)">
+                    {{ adoptanteProcesandoId === adoptante.id_adoptante ? 'Procesando...' : 'Desactivar' }}
+                  </button>
+                  <button class="ap-button ap-button-sm ap-button-success-outline" type="button" *ngIf="esAdmin() && adoptante.activo === false" [disabled]="adoptanteProcesandoId === adoptante.id_adoptante" (click)="activar(adoptante)">
+                    {{ adoptanteProcesandoId === adoptante.id_adoptante ? 'Procesando...' : 'Activar' }}
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pagination-row" *ngIf="!loading && adoptantesFiltrados().length > 0">
+        <span>{{ rangoActual() }}</span>
+        <div class="pagination-actions">
+          <button class="ap-button ap-button-sm ap-button-secondary" [disabled]="paginaActual === 1" (click)="cambiarPagina(paginaActual - 1)">Anterior</button>
+          <button class="ap-button ap-button-sm" *ngFor="let pagina of paginas()" [class.ap-button-active]="paginaActual === pagina" (click)="cambiarPagina(pagina)">{{ pagina }}</button>
+          <button class="ap-button ap-button-sm ap-button-secondary" [disabled]="paginaActual === totalPaginas()" (click)="cambiarPagina(paginaActual + 1)">Siguiente</button>
+        </div>
+      </div>
+
+      <div class="empty-state" *ngIf="!loading && adoptantesFiltrados().length === 0">
+        <strong>No hay adoptantes para mostrar</strong>
+        Ajusta la busqueda o el filtro de historial.
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="modal-overlay" *ngIf="adoptanteDetalle || cargandoDetalle">
+  <section class="modal-content-custom detail-modal">
+    <header class="modal-header-clean">
+      <div>
+        <p class="eyebrow">Historial adoptante</p>
+        <h2>{{ cargandoDetalle ? 'Cargando...' : nombreCompleto(adoptanteDetalle) }}</h2>
+        <span class="status" *ngIf="adoptanteDetalle" [class.status-inactivo]="adoptanteDetalle.activo === false" [class.status-activo]="adoptanteDetalle.activo !== false">
+          {{ adoptanteDetalle.activo === false ? 'INACTIVO' : 'ACTIVO' }}
+        </span>
+      </div>
+      <button class="ap-modal-close" type="button" (click)="cerrarDetalle()"></button>
+    </header>
+
+    <div class="modal-body-clean" *ngIf="adoptanteDetalle">
+      <div class="summary-grid">
+        <div>
+          <span>Total</span>
+          <strong>{{ adoptanteDetalle.total_solicitudes || 0 }}</strong>
+        </div>
+        <div>
+          <span>Finalizadas</span>
+          <strong>{{ adoptanteDetalle.finalizadas || 0 }}</strong>
+        </div>
+        <div>
+          <span>No asistio</span>
+          <strong>{{ adoptanteDetalle.no_asistio || 0 }}</strong>
+        </div>
+        <div>
+          <span>Canceladas</span>
+          <strong>{{ adoptanteDetalle.canceladas || 0 }}</strong>
+        </div>
+      </div>
+
+      <div class="info-list compact-info">
+        <p><span>DNI: </span>{{ adoptanteDetalle.dni || '-' }}</p>
+        <p><span>Email: </span>{{ adoptanteDetalle.email || '-' }}</p>
+        <p><span>Telefono: </span>{{ adoptanteDetalle.telefono || '-' }}</p>
+        <p><span>Direccion: </span>{{ adoptanteDetalle.direccion || '-' }}</p>
+      </div>
+
+      <div class="ap-table-wrap ap-mt-3">
+        <table class="ap-table">
+          <thead>
+            <tr>
+              <th>Solicitud</th>
+              <th>Mascota</th>
+              <th>Fecha</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let solicitud of adoptanteDetalle.solicitudes || []">
+              <td>
+                <a [routerLink]="['/solicitudes/detalle', solicitud.id_solicitud]">N°{{ solicitud.id_solicitud }}</a>
+              </td>
+              <td>{{ solicitud.mascota || '-' }} <small class="ap-muted">{{ solicitud.especie || '' }}</small></td>
+              <td>{{ solicitud.fecha_registro ? (solicitud.fecha_registro | date: 'dd/MM/yyyy') : '-' }}</td>
+              <td><span class="status" [ngClass]="statusClass(solicitud.estado_solicitud)">{{ solicitud.estado_solicitud }}</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="empty-state" *ngIf="!adoptanteDetalle.solicitudes?.length">
+        <strong>Sin solicitudes registradas</strong>
+        Este adoptante todavia no tiene historial de adopcion.
+      </div>
+    </div>
+  </section>
+</div>

@@ -3,6 +3,8 @@
     <color name="color_principal">#6A35D8</color>
     <color name="color_principal_oscuro">#2A145A</color>
     <color name="color_principal_claro">#EEE6FF</color>
+    <color name="color_acento">#8E5CF7</color>
+    <color name="color_superficie">#FCFAFF</color>
 
     <color name="color_texto">#161222</color>
     <color name="color_texto_secundario">#6F6A7D</color>

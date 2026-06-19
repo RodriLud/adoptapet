@@ -6,70 +6,98 @@
     android:layout_height="match_parent"
     android:background="@color/color_fondo">
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:clipToPadding="false">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbarDetalle"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/color_principal"
-            android:title="@string/detail_title"
-            android:titleTextColor="@color/white"
-            app:navigationIcon="@android:drawable/ic_menu_revert"
-            app:navigationIconTint="@color/white" />
+            android:orientation="vertical">
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
-            <LinearLayout
+            <FrameLayout
+                android:id="@+id/headerDetalleMascota"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/espacio_medio">
+                android:layout_height="280dp">
 
                 <ImageView
                     android:id="@+id/imgDetalleMascota"
                     android:layout_width="match_parent"
-                    android:layout_height="260dp"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/detail_title"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/kitten1" />
+                    android:src="@drawable/ic_pet_placeholder" />
 
-                <TextView
-                    android:id="@+id/txtDetalleNombre"
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:layout_gravity="top"
+                    android:background="@drawable/bg_header_purple"
+                    android:alpha="0.55" />
+
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/toolbarDetalle"
+                    style="@style/Widget.AdoptaPet.Toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/espacio_medio"
-                    android:text="Luna"
-                    android:textColor="@color/color_texto"
-                    android:textSize="30sp"
-                    android:textStyle="bold" />
+                    android:layout_gravity="top"
+                    android:minHeight="56dp"
+                    app:navigationIcon="@android:drawable/ic_menu_revert"
+                    app:title="@string/detail_title" />
 
-                <TextView
-                    android:id="@+id/txtDetalleInfo"
+                <ImageView
+                    android:id="@+id/imgFavoritoDetalle"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="top|end"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="@dimen/espacio_medio"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/nav_favorites"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_favorite_border" />
+
+            </FrameLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.AdoptaPet.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/espacio_medio"
+                android:layout_marginTop="-30dp"
+                android:layout_marginEnd="@dimen/espacio_medio"
+                android:layout_marginBottom="@dimen/espacio_grande">
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/espacio_pequeno"
-                    android:text="Perro • 2 años • Hembra"
-                    android:textColor="@color/color_texto_secundario"
-                    android:textSize="16sp" />
+                    android:orientation="vertical"
+                    android:padding="@dimen/espacio_medio">
 
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/espacio_medio"
-                    app:cardCornerRadius="18dp"
-                    app:cardElevation="2dp"
-                    app:strokeColor="@color/color_borde"
-                    app:strokeWidth="1dp">
+                    <TextView
+                        android:id="@+id/txtDetalleNombre"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sample_pet_name"
+                        android:textColor="@color/color_texto"
+                        android:textSize="30sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txtDetalleInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text="@string/sample_pet_info"
+                        android:textColor="@color/color_texto_secundario"
+                        android:textSize="16sp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/espacio_medio"
+                        android:background="@drawable/bg_chip_purple"
                         android:orientation="vertical"
                         android:padding="@dimen/espacio_medio">
 
@@ -77,16 +105,14 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/characteristics"
-                            android:textColor="@color/color_texto"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
+                            style="@style/TextCardTitle" />
 
                         <TextView
                             android:id="@+id/txtDetalleSize"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/espacio_pequeno"
-                            android:text="Tamaño mediano"
+                            android:text="@string/sample_pet_size"
                             android:textColor="@color/color_texto_secundario"
                             android:textSize="15sp" />
 
@@ -95,7 +121,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/espacio_pequeno"
-                            android:text="Esterilizado: Sí"
+                            android:text="@string/sample_pet_sterilized"
                             android:textColor="@color/color_texto_secundario"
                             android:textSize="15sp" />
 
@@ -104,46 +130,40 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/espacio_pequeno"
-                            android:text="● Disponible para adopción"
+                            android:text="@string/pet_available"
                             android:textColor="@color/color_verde"
                             android:textSize="16sp"
                             android:textStyle="bold" />
-
                     </LinearLayout>
 
-                </com.google.android.material.card.MaterialCardView>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/espacio_medio"
+                        android:text="@string/description"
+                        style="@style/TextCardTitle" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/espacio_medio"
-                    android:text="@string/description"
-                    android:textColor="@color/color_texto"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/txtDetalleDescripcion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/espacio_pequeno"
+                        android:text="@string/pet_description"
+                        android:textColor="@color/color_texto_secundario"
+                        android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/txtDetalleDescripcion"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/espacio_pequeno"
-                    android:text="@string/pet_description"
-                    android:textColor="@color/color_texto_secundario"
-                    android:textSize="16sp" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnSolicitarAdopcion"
+                        style="@style/Widget.AdoptaPet.Button.Primary"
+                        android:layout_width="match_parent"
+                        android:layout_height="54dp"
+                        android:layout_marginTop="@dimen/espacio_grande"
+                        android:text="@string/btn_request" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnSolicitarAdopcion"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/espacio_grande"
-                    android:text="Solicitar adopción"
-                    android:textAllCaps="false"
-                    app:cornerRadius="24dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-            </LinearLayout>
-
-        </ScrollView>
-
-    </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
