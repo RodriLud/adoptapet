@@ -91,7 +91,7 @@
                     app:startIconTint="@color/color_principal">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edtCorreoLogin"
+                        android:id="@+id/editEmailLogin"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textEmailAddress"
@@ -109,7 +109,7 @@
                     app:startIconTint="@color/color_principal">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edtPasswordLogin"
+                        android:id="@+id/editPasswordLogin"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textPassword"

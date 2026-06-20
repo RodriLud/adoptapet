@@ -7,7 +7,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import com.cibertec.adoptapet.MainActivity
-import com.cibertec.adoptapet.data.SessionManager
+import com.cibertec.adoptapet.data.FirebaseRepository
 import com.cibertec.adoptapet.databinding.ActivityWelcomeBinding
 import com.cibertec.adoptapet.util.SystemBarUtils
 
@@ -15,6 +15,7 @@ class WelcomeActivity : AppCompatActivity() {
 
     private var _binding: ActivityWelcomeBinding? = null
     private val binding get() = _binding!!
+    private val repository = FirebaseRepository()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +30,8 @@ class WelcomeActivity : AppCompatActivity() {
             insets
         }
 
-        if (SessionManager(this).haySesionActiva()) {
+        // Usar Firebase para verificar la sesión
+        if (repository.isUserLoggedIn()) {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
             return

@@ -110,4 +110,7 @@
     <string name="sample_request_detail_limit">Limite: -</string>
     <string name="sample_pet_sterilized">Esterilizado: Si</string>
     <string name="pet_image_description">Imagen de mascota</string>
+    <string name="message_account_created">Su cuenta ha sido creada</string>
+    <string name="error_login_required">Por favor, ingresa correo y contraseña</string>
+    <string name="error_password_length">La contraseña debe tener al menos 6 caracteres</string>
 </resources>

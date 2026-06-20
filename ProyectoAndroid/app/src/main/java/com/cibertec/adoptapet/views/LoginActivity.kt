@@ -9,21 +9,15 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import com.cibertec.adoptapet.MainActivity
 import com.cibertec.adoptapet.R
-import com.cibertec.adoptapet.data.SessionManager
+import com.cibertec.adoptapet.data.FirebaseRepository
 import com.cibertec.adoptapet.databinding.ActivityLoginBinding
-import com.cibertec.adoptapet.models.Login
-import com.cibertec.adoptapet.models.Usuario
-import com.cibertec.adoptapet.network.ApiClient
 import com.cibertec.adoptapet.util.SystemBarUtils
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class LoginActivity : AppCompatActivity() {
 
     private var _binding: ActivityLoginBinding? = null
     private val binding get() = _binding!!
-    private lateinit var sessionManager: SessionManager
+    private val repository = FirebaseRepository()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +25,11 @@ class LoginActivity : AppCompatActivity() {
         _binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
         SystemBarUtils.aplicarBarras(this)
-        sessionManager = SessionManager(this)
+
+        if (repository.isUserLoggedIn()) {
+            goToMain()
+            return
+        }
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.scrollLogin) { view, insets ->
             val barras = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -39,13 +37,8 @@ class LoginActivity : AppCompatActivity() {
             insets
         }
 
-        if (sessionManager.haySesionActiva()) {
-            abrirAppPrincipal()
-            return
-        }
-
         binding.btnLogin.setOnClickListener {
-            validarLogin()
+            login()
         }
 
         binding.tvIrRegistro.setOnClickListener {
@@ -53,63 +46,62 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun validarLogin() {
-        val usuario = binding.edtCorreoLogin.text.toString().trim()
-        val password = binding.edtPasswordLogin.text.toString().trim()
 
-        if (usuario.isEmpty()) {
-            binding.edtCorreoLogin.error = "Ingresa tu usuario o correo"
-            return
+    private fun validate(email: String, password: String): Boolean {
+        if (email.isBlank() || password.isBlank()) {
+            showMessage(getString(R.string.error_login_required))
+            return false
         }
 
-        if (password.isEmpty()) {
-            binding.edtPasswordLogin.error = "Ingresa tu contrasena"
-            return
+        if (password.length < 6) {
+            showMessage(getString(R.string.error_password_length))
+            return false
         }
-
-        iniciarSesion(usuario, password)
+        return true
     }
 
-    private fun iniciarSesion(usuario: String, password: String) {
+    private fun login() {
+        val email = binding.editEmailLogin.text.toString().trim()
+        val password = binding.editPasswordLogin.text.toString().trim()
+
+        if (!validate(email, password)) return
+
         cambiarEstadoCarga(true)
 
-        val login = Login(username = usuario, password = password)
-        ApiClient.authService().login(login).enqueue(object : Callback<Usuario> {
-            override fun onResponse(call: Call<Usuario>, response: Response<Usuario>) {
-                cambiarEstadoCarga(false)
-
-                val user = response.body()
-                if (!response.isSuccessful || user == null) {
-                    Toast.makeText(
-                        this@LoginActivity,
-                        "Usuario o contrasena incorrectos",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return
+        repository.login(
+            email = email,
+            password = password,
+            onSuccess = {
+                val uid = repository.getCurrentUserUid()
+                if (uid != null) {
+                    repository.getUserData(uid,
+                        onSuccess = { data ->
+                            cambiarEstadoCarga(false)
+                            val rol = data?.get("rol") as? String ?: "ROLE_ADOPTANTE"
+                            
+                            // Aquí puedes redirigir según el rol
+                            if (rol == "ROLE_ADMIN") {
+                                // Por ahora lo mandamos a Main, pero podrías tener AdminActivity
+                                goToMain()
+                            } else {
+                                goToMain()
+                            }
+                        },
+                        onError = { error ->
+                            cambiarEstadoCarga(false)
+                            showMessage("Error al obtener perfil: $error")
+                        }
+                    )
+                } else {
+                    cambiarEstadoCarga(false)
+                    goToMain()
                 }
-
-                if (user.rol != "ROLE_ADOPTANTE") {
-                    Toast.makeText(
-                        this@LoginActivity,
-                        "Esta app es solo para adoptantes",
-                        Toast.LENGTH_LONG
-                    ).show()
-                    return
-                }
-
-                sessionManager.guardarSesion(user, password)
-                abrirAppPrincipal()
-            }
-
-            override fun onFailure(call: Call<Usuario>, t: Throwable) {
+            },
+            onError = { error ->
                 cambiarEstadoCarga(false)
-                Toast.makeText(
-                    this@LoginActivity,
-                    "No se pudo conectar: ${t.message ?: "servidor no disponible"}",
-                    Toast.LENGTH_LONG
-                ).show()
+                showMessage(error)
             }
-        })
+        )
     }
 
     private fun cambiarEstadoCarga(cargando: Boolean) {
@@ -121,8 +113,15 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun abrirAppPrincipal() {
-        startActivity(Intent(this, MainActivity::class.java))
+
+    private fun goToMain() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
         finish()
+    }
+
+    private fun showMessage(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }
