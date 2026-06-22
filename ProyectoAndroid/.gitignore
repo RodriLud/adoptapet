@@ -60,7 +60,7 @@ captures/
 *.sqlite3
 
 # ==================== Firebase & Google Services ====================
-google-services.json
+# google-services.json
 service-account-key.json
 serviceAccountKey.json
 firebase-config.json
