@@ -3,6 +3,7 @@ package com.cibertec.adoptapet
 import android.Manifest
 import android.os.Bundle
 import android.os.Build
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.cibertec.adoptapet.database.AdoptaPetDatabase
@@ -13,6 +14,7 @@ import com.cibertec.adoptapet.fragments.NotificationsFragment
 import com.cibertec.adoptapet.fragments.ProfileFragment
 import com.cibertec.adoptapet.fragments.RequestsFragment
 import com.cibertec.adoptapet.util.SystemBarUtils
+import com.google.firebase.messaging.FirebaseMessaging
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -25,6 +27,7 @@ class MainActivity : AppCompatActivity() {
         SystemBarUtils.aplicarBarras(this)
         AdoptaPetDatabase(this).writableDatabase.close()
         solicitarPermisoNotificaciones()
+        registrarTokenFirebase()
 
         cambiarFragment(HomeFragment())
 
@@ -62,6 +65,24 @@ class MainActivity : AppCompatActivity() {
     private fun solicitarPermisoNotificaciones() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 200)
+        }
+    }
+
+    private fun registrarTokenFirebase() {
+        try {
+            FirebaseMessaging.getInstance().token
+                .addOnSuccessListener { token ->
+                    getSharedPreferences("adoptapet_session", MODE_PRIVATE)
+                        .edit()
+                        .putString("fcm_token", token)
+                        .apply()
+                    Log.d("AdoptaPetFCM", "Token FCM: $token")
+                }
+                .addOnFailureListener { error ->
+                    Log.w("AdoptaPetFCM", "No se pudo obtener el token FCM", error)
+                }
+        } catch (error: IllegalStateException) {
+            Log.w("AdoptaPetFCM", "Firebase aun no esta configurado", error)
         }
     }
 }
