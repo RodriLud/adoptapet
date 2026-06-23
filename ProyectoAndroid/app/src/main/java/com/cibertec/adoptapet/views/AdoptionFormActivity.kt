@@ -146,15 +146,8 @@ class AdoptionFormActivity : AppCompatActivity() {
 
         cambiarEstadoCarga(true)
 
-        /*val service = ApiClient.solicitudService(
-            sessionManager.obtenerUsername(),
-            sessionManager.obtenerPassword()
-        )*/
-
-        // 1. Llamamos al servicio público que creamos antes
         val service = ApiClient.solicitudServicePublica()
 
-        // Convertimos todos los textos a partes de formulario limpias (sin octet-stream)
         val idAdoptantePart = okhttp3.MultipartBody.Part.createFormData("id_adoptante", idAdoptante.toString())
         val idMascotaPart = okhttp3.MultipartBody.Part.createFormData("id_mascota", pet.id.toString())
         val comentarioPart = okhttp3.MultipartBody.Part.createFormData("comentario", comentarios)

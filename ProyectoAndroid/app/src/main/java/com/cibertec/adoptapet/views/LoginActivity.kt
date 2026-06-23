@@ -31,7 +31,6 @@ class LoginActivity : AppCompatActivity() {
 
         sessionManager = SessionManager(this)
 
-        // Verificación inteligente: Si ya está en Firebase pero falta sesión local, la recupera
         if (repository.isUserLoggedIn()) {
             if (sessionManager.haySesionActiva()) {
                 goToMain()
@@ -88,15 +87,14 @@ class LoginActivity : AppCompatActivity() {
                             cambiarEstadoCarga(false)
 
                             if (data != null) {
-                                // Mapeamos el ID numérico que viene de Firebase/API
                                 val idUsuario = (data["id_usuario"] as? Long)?.toInt()
                                     ?: (data["id_usuario"] as? String)?.toIntOrNull()
                                     ?: 1
 
-                                val username = data["username"] as? String ?: email.substringBefore("@")
+                                val username =
+                                    data["username"] as? String ?: email.substringBefore("@")
                                 val rol = data["rol"] as? String ?: "ROLE_ADOPTANTE"
 
-                                // SOLUCIÓN AL ERROR: Pasamos los 11 parámetros directamente en el constructor
                                 val usuarioLogueado = Usuario(
                                     id_usuario = idUsuario,
                                     username = username,
@@ -110,8 +108,6 @@ class LoginActivity : AppCompatActivity() {
                                     telefono = data["telefono"] as? String ?: "",
                                     direccion = data["direccion"] as? String ?: ""
                                 )
-
-                                // Guardamos la sesión local de forma única
                                 sessionManager.guardarSesion(usuarioLogueado, password)
                             }
 

@@ -66,7 +66,7 @@ public class SolicitudController {
 			return ResponseEntity.badRequest().body(new ApiResponse(e.getMessage()));
 		}
 	}
-///////////////////////////////////////////////////////////////////////////
+
 	@PostMapping(value = "/registrar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<?> registrarFormulario(
 	        @RequestParam("id_adoptante") Integer idAdoptante,
@@ -89,7 +89,7 @@ public class SolicitudController {
 			return ResponseEntity.badRequest().body(new ApiResponse(e.getMessage()));
 		}
 	}
-///////////////////////////////////////////////////////////////////////////
+
 	@PutMapping("/aprobar/{id}")
 	public ResponseEntity<?> aprobar(@PathVariable Integer id,
 			@RequestBody(required = false) AprobarSolicitudRequest request, Authentication authentication) {

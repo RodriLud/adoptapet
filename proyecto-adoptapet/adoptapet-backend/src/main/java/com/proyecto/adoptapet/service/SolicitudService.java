@@ -127,19 +127,16 @@ public class SolicitudService {
 		return solicitudRepo.save(solicitud);
 	}
 
-	/////////////////////////////////////////////////////////////////////////////
 	@Transactional
 	public Solicitud guardarManual(Integer idAdoptante, Integer idMascota, String comentario, String motivoAdopcion,
 			String tipoVivienda, String experienciaMascotas, String otrasMascotas, Integer cantidadPersonasHogar,
 			String comentariosAdicionales, MultipartFile archivoDni, MultipartFile archivoDomicilio) throws Exception {
 
-		// 1. Validamos la mascota primero
 		Mascota mascota = validarSolicitud(idAdoptante, idMascota);
 		validarArchivoObligatorio(archivoDni, "El DNI es obligatorio para registrar la solicitud");
 		validarArchivoObligatorio(archivoDomicilio,
 				"El comprobante de domicilio es obligatorio para registrar la solicitud");
 
-		// 2. Buscamos al adoptante, si no existe lo creamos
 		Adoptante adoptante = adoptanteRepo.findById(idAdoptante).orElseGet(() -> {
 			String username = "firebase_user_" + idAdoptante;
 			return adoptanteRepo.findByUsername(username).orElseGet(() -> {
@@ -160,7 +157,6 @@ public class SolicitudService {
 			});
 		});
 
-		// 3. Creamos la solicitud
 		Solicitud solicitud = new Solicitud();
 		solicitud.setAdoptante(adoptante);
 		solicitud.setMascota(mascota);
@@ -181,7 +177,6 @@ public class SolicitudService {
 		return solicitudRepo.save(solicitud);
 	}
 	
-	//////////////////////////////////////////////////////////////////////////
 
 	@Transactional
 	public Solicitud aprobarSolicitud(Integer idSolicitud) {
@@ -653,26 +648,6 @@ public class SolicitudService {
 		if (!"SIN NOVEDADES".equals(mascota.getEst_salud())) {
 			throw new RuntimeException("La mascota no se encuentra apta para adopcion");
 		}
-
-//		/////////////////////////////////////////////////////////////////////
-//		if (!adoptanteRepo.existsById(idAdoptante)) {
-//		    Adoptante nuevo = new Adoptante();
-//		    nuevo.setId_usuario(idAdoptante);
-//		    nuevo.setUsername("firebase_user_" + idAdoptante);
-//		    nuevo.setPassword("$2a$10$7R9gWjVUXb8mOnBf3H1ve.rG7M6BThL3.uMle3tT9zZJ3t13A.mPy"); 
-//		    nuevo.setRol("ROLE_ADOPTANTE");
-//		    nuevo.setActivo(true);
-//		    nuevo.setNom_adoptante("Adoptante");
-//		    nuevo.setApe_adoptante("Nro " + idAdoptante);
-//		    nuevo.setDni("00000000");
-//		    nuevo.setEmail("user_" + idAdoptante + "@mail.com");
-//		    nuevo.setTelefono("999999999");
-//		    nuevo.setDireccion("Dirección Temporal");
-//		    nuevo.setFec_nacimiento(java.sql.Date.valueOf("2000-01-01"));
-//
-//		    // USAMOS saveAndFlush PARA OBLIGAR A MYSQL A REGISTRARLO AL INSTANTE EN MEMORIA
-//		    adoptanteRepo.saveAndFlush(nuevo); 
-//		}
 		if (solicitudRepo.existeSolicitudActiva(idAdoptante, idMascota, "PENDIENTE")) {
 			throw new RuntimeException("Ya existe una solicitud pendiente para esta mascota");
 		}

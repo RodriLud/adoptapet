@@ -42,7 +42,6 @@ object ApiClient {
         return retrofit(username, password).create(SolicitudService::class.java)
     }
 
-    // Agrega esta función en tu ApiClient.kt
     fun solicitudServicePublica(): SolicitudService {
         return retrofit().create(SolicitudService::class.java)
     }
