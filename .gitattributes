@@ -1,0 +1,143 @@
+# ==================== Auto Detect & Default ====================
+* text=auto
+
+# ==================== Line Ending Handling ====================
+# Windows shell scripts
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.com text eol=crlf
+*.exe text eol=crlf
+
+# Unix shell scripts
+*.sh text eol=lf
+*.bash text eol=lf
+gradlew text eol=lf
+
+# Maven & Gradle
+mvnw text eol=lf
+mvnw.cmd text eol=crlf
+gradle-wrapper.jar binary
+
+# ==================== Configuration Files ====================
+*.md text eol=lf
+*.txt text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.xml text eol=lf
+*.properties text eol=lf
+*.gradle text eol=lf
+*.gradle.kts text eol=lf
+*.editorconfig text eol=lf
+.gitignore text eol=lf
+.gitattributes text eol=lf
+.prettierrc text eol=lf
+.eslintrc* text eol=lf
+.env* text eol=lf
+
+# ==================== Source Code ====================
+# Java
+*.java text eol=lf
+*.kt text eol=lf
+*.kts text eol=lf
+
+# JavaScript/TypeScript
+*.js text eol=lf
+*.mjs text eol=lf
+*.cjs text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.jsx text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.scss text eol=lf
+*.less text eol=lf
+*.sass text eol=lf
+
+# SQL & Database
+*.sql text eol=lf
+
+# Manifest & Android
+*.xml text eol=lf
+AndroidManifest.xml text eol=lf
+
+# ==================== Binary Files ====================
+# Images
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg binary
+*.webp binary
+*.bmp binary
+*.tiff binary
+*.tif binary
+
+# Media
+*.mov binary
+*.mp4 binary
+*.mp3 binary
+*.wav binary
+*.flac binary
+*.m4a binary
+
+# Archives
+*.zip binary
+*.tar binary
+*.tar.gz binary
+*.rar binary
+*.7z binary
+*.gz binary
+*.bz2 binary
+
+# Java/Android Binaries
+*.class binary
+*.jar binary
+*.war binary
+*.ear binary
+*.aar binary
+*.apk binary
+*.dex binary
+
+# Native Libraries
+*.so binary
+*.a binary
+*.o binary
+*.dylib binary
+*.dll binary
+*.exe binary
+
+# Android/Firebase
+*.keystore binary
+*.jks binary
+*.p12 binary
+*.pfx binary
+*.pem binary
+
+# Office
+*.docx binary
+*.xlsx binary
+*.pptx binary
+*.doc binary
+*.xls binary
+*.ppt binary
+*.pdf binary
+*.odt binary
+
+# Database
+*.db binary
+*.sqlite binary
+*.sqlite3 binary
+*.mdb binary
+
+# IDE/Editor Metadata ====================
+.idea/** text merge=union
+*.iml text merge=union
+.vscode/** text merge=union
+
+# Gradle/Maven Wrappers
+.mvn/wrapper/maven-wrapper.jar binary
+.mvn/wrapper/maven-wrapper.properties text eol=lf
+gradle/wrapper/gradle-wrapper.jar binary
+gradle/wrapper/gradle-wrapper.properties text eol=lf

@@ -1,0 +1,7 @@
+<resources>
+    <dimen name="espacio_xs">4dp</dimen>
+    <dimen name="espacio_pequeno">8dp</dimen>
+    <dimen name="espacio_medio">16dp</dimen>
+    <dimen name="espacio_grande">24dp</dimen>
+    <dimen name="radio_card">20dp</dimen>
+</resources>

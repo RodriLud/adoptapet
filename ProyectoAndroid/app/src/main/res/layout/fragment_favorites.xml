@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_fondo"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="136dp"
+        android:background="@drawable/bg_header_purple"
+        android:gravity="bottom"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/espacio_medio"
+        android:paddingEnd="@dimen/espacio_medio"
+        android:paddingBottom="@dimen/espacio_grande">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/favorites_title"
+            style="@style/TextScreenTitle" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/favorites_header_subtitle"
+            style="@style/TextScreenSubtitle" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtFavoritosVacio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/espacio_medio"
+        android:layout_marginTop="@dimen/espacio_grande"
+        android:layout_marginEnd="@dimen/espacio_medio"
+        android:background="@drawable/bg_card_soft"
+        android:gravity="center"
+        android:padding="@dimen/espacio_grande"
+        android:text="@string/favorites_subtitle"
+        android:textColor="@color/color_texto_secundario"
+        android:textSize="17sp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvFavoritos"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/espacio_medio"
+        android:layout_marginTop="@dimen/espacio_medio"
+        android:layout_marginEnd="@dimen/espacio_medio"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/espacio_medio" />
+
+</LinearLayout>

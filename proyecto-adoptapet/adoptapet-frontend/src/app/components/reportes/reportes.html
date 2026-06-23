@@ -1,0 +1,160 @@
+<main class="admin-shell">
+  <app-sidebar />
+
+  <section class="content-area">
+    <header class="page-header reports-header">
+      <div>
+        <p class="eyebrow">Analisis administrativo</p>
+        <h1>Reportes</h1>
+      </div>
+      <button class="ap-button ap-button-light report-period" type="button" [disabled]="descargando" (click)="descargarPdf()">
+        {{ descargando ? 'Descargando...' : 'Descargar PDF' }}
+      </button>
+    </header>
+
+    <section class="report-filters">
+      <div class="report-filter-title">
+        <strong>Filtros del reporte</strong>
+        <span>{{ solicitudesFiltradas.length }} solicitudes - {{ mascotasFiltradas.length }} mascotas</span>
+      </div>
+      <label>
+        Estado solicitud
+        <select class="ap-select" [(ngModel)]="filtroEstadoSolicitud" (change)="alCambiarFiltros()">
+          <option value="">Todos</option>
+          <option *ngFor="let estado of opcionesEstadoSolicitud" [value]="estado">{{ estado }}</option>
+        </select>
+      </label>
+      <label>
+        Estado mascota
+        <select class="ap-select" [(ngModel)]="filtroEstadoMascota" (change)="alCambiarFiltros()">
+          <option value="">Todos</option>
+          <option *ngFor="let estado of opcionesEstadoMascota" [value]="estado">{{ estado }}</option>
+        </select>
+      </label>
+      <label>
+        Especie
+        <select class="ap-select" [(ngModel)]="filtroEspecie" (change)="alCambiarFiltros()">
+          <option value="">Todas</option>
+          <option *ngFor="let especie of opcionesEspecie" [value]="especie">{{ especie }}</option>
+        </select>
+      </label>
+      <button class="ap-button ap-button-secondary" type="button" (click)="limpiarFiltros()">Limpiar filtros</button>
+    </section>
+
+    <section class="report-hero">
+      <article>
+        <span>Mascotas filtradas</span>
+        <strong>{{ mascotasFiltradas.length }}</strong>
+        <small>Segun estado y especie</small>
+      </article>
+      <article>
+        <span>Solicitudes filtradas</span>
+        <strong>{{ solicitudesFiltradas.length }}</strong>
+        <small>Segun estado seleccionado</small>
+      </article>
+      <article>
+        <span>Tasa de finalizacion</span>
+        <strong>{{ tasaFinalizacion() }}%</strong>
+        <small>Finalizadas sobre solicitudes filtradas</small>
+      </article>
+      <article>
+        <span>Tasa de rechazo</span>
+        <strong>{{ tasaRechazo() }}%</strong>
+        <small>Rechazadas sobre solicitudes filtradas</small>
+      </article>
+    </section>
+
+    <div class="detail-grid reports-grid">
+      <section class="detail-panel report-card accent-green">
+        <h2>Mascotas por estado</h2>
+        <div class="report-bars">
+          <div class="report-bar" *ngFor="let row of agrupar(mascotasFiltradas, 'est_adopcion')">
+            <div>
+              <strong>{{ row.label }}</strong>
+              <span>{{ row.value }} registros</span>
+            </div>
+            <div class="progress-track">
+              <i [style.width.%]="porcentaje(row.value, mascotasFiltradas.length)"></i>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="detail-panel report-card accent-blue">
+        <h2>Mascotas por especie</h2>
+        <div class="species-grid">
+          <div class="species-item" *ngFor="let row of agrupar(mascotasFiltradas, 'especie')">
+            <span>{{ row.label }}</span>
+            <strong>{{ row.value }}</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="detail-panel report-card accent-amber">
+        <h2>Solicitudes por estado</h2>
+        <div class="status-stack">
+          <div class="status-row-report" *ngFor="let row of agrupar(solicitudesFiltradas, 'estado_solicitud')">
+            <span class="status" [ngClass]="statusClass(row.label)">{{ row.label }}</span>
+            <strong>{{ row.value }}</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="detail-panel report-card accent-rose">
+        <h2>Ultimas adopciones finalizadas</h2>
+        <div class="report-list">
+          <div *ngFor="let s of ultimasFinalizadas()">
+            <strong>{{ s.adoptante?.nom_adoptante }} {{ s.adoptante?.ape_adoptante }}</strong>
+            <span>{{ s.mascota?.nombre || 'Mascota sin dato' }} - {{ s.fecha_registro || 'Sin fecha' }}</span>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section class="table-panel report-table-panel ap-mt-3">
+      <div class="table-title-row">
+        <div>
+          <p class="eyebrow">Detalle</p>
+          <h2>Reporte de solicitudes</h2>
+        </div>
+        <span>{{ solicitudesFiltradas.length }} registros</span>
+      </div>
+
+      <div class="ap-table-wrap">
+        <table class="ap-table">
+          <thead>
+            <tr>
+              <th>Adoptante</th>
+              <th>Mascota</th>
+              <th>Estado</th>
+              <th>Vivienda</th>
+              <th>Personas hogar</th>
+              <th>Fecha</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let solicitud of solicitudesReportePaginadas()">
+              <td>{{ solicitud.adoptante?.nom_adoptante }} {{ solicitud.adoptante?.ape_adoptante }}</td>
+              <td>{{ solicitud.mascota?.nombre || 'Sin dato' }}</td>
+              <td><span class="status" [ngClass]="statusClass(solicitud.estado_solicitud)">{{ solicitud.estado_solicitud || 'SIN DATO' }}</span></td>
+              <td>{{ solicitud.tipo_vivienda || 'Sin dato' }}</td>
+              <td>{{ solicitud.cantidad_personas_hogar || 'Sin dato' }}</td>
+              <td>{{ solicitud.fecha_registro || 'Sin fecha' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pagination-row" *ngIf="solicitudesFiltradas.length > 0">
+        <span>{{ rangoSolicitudes() }}</span>
+        <div class="pagination-actions">
+          <button class="ap-button ap-button-sm ap-button-secondary" [disabled]="paginaSolicitudes === 1" (click)="cambiarPaginaSolicitudes(paginaSolicitudes - 1)">Anterior</button>
+          <button class="ap-button ap-button-sm" *ngFor="let pagina of paginasSolicitudes()" [class.ap-button-active]="paginaSolicitudes === pagina" (click)="cambiarPaginaSolicitudes(pagina)">{{ pagina }}</button>
+          <button class="ap-button ap-button-sm ap-button-secondary" [disabled]="paginaSolicitudes === totalPaginasSolicitudes()" (click)="cambiarPaginaSolicitudes(paginaSolicitudes + 1)">Siguiente</button>
+        </div>
+      </div>
+
+      <div class="empty-state" *ngIf="!solicitudesFiltradas.length">No hay solicitudes para los filtros seleccionados.</div>
+    </section>
+  </section>
+</main>

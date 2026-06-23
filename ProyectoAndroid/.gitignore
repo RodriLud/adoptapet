@@ -1,0 +1,135 @@
+# ==================== Gradle ====================
+.gradle/
+.gradle
+build/
+*/build/
+app/build/
+gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
+gradlew
+gradlew.bat
+
+# ==================== IDE ====================
+.idea/
+.idea
+*.iml
+*.iws
+*.ipr
+*.sublime-workspace
+*.sublime-project
+.vscode/
+.vscode
+*.code-workspace
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+.kotlin/
+
+# ==================== Local Properties ====================
+local.properties
+local.gradle.properties
+gradle.properties.local
+.env
+.env.local
+
+# ==================== Build Files ====================
+*.apk
+*.ap_
+*.dex
+*.class
+*.jar
+*.war
+*.aar
+*.zip
+*.tar.gz
+*.rar
+*.exe
+build-info.properties
+output*.json
+
+# ==================== Android Specific ====================
+captures/
+.externalNativeBuild
+.cxx/
+.cxx
+.clang-format
+*.db
+*.sqlite
+*.sqlite3
+
+# ==================== Firebase & Google Services ====================
+# google-services.json
+service-account-key.json
+serviceAccountKey.json
+firebase-config.json
+com.google.android.gms.json
+.firebase/
+firebase-debug.log
+
+# ==================== Native Build Files ====================
+*.o
+*.a
+*.lib
+*.so
+*.dylib
+*.dll
+*.exe
+*.out
+
+# ==================== OS Files ====================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.AppleDouble
+.LSOverride
+
+# ==================== Editor Backups ====================
+*.swp
+*.swo
+*~
+*.bak
+*.tmp
+*.orig
+
+# ==================== Logs ====================
+*.log
+*.class
+*.jar
+*.war
+lint-results.xml
+lint-results-*.xml
+*.trace
+
+# ==================== AVD & Emulator ====================
+*.avd
+emulator*.log
+
+# ==================== Lint & Testing ====================
+lint-baseline.xml
+lint-results*
+coverage/
+test-results/
+androidTest-results/
+
+# ==================== Misc ====================
+.signingConfig.json
+signing.properties
+/local.properties
+/.gradle
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+*.pid

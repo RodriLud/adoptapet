@@ -1,0 +1,138 @@
+:host {
+  display: block;
+}
+
+.request-header {
+  padding: 18px 20px;
+  border: 1px solid #d8d0c4;
+  border-radius: var(--ap-radius);
+  background:
+    linear-gradient(135deg, rgba(37, 120, 102, 0.1), rgba(255, 253, 250, 0.92) 70%),
+    #fffdfa;
+  box-shadow: var(--ap-shadow-soft);
+}
+
+.request-detail-grid {
+  align-items: stretch;
+}
+
+.request-panel {
+  position: relative;
+  overflow: hidden;
+}
+
+.request-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: linear-gradient(90deg, var(--ap-primary), #8fb8a9);
+}
+
+.main-name {
+  margin: 0 0 14px;
+  color: #17211f;
+  font-size: 1.1rem;
+  font-weight: 620;
+  line-height: 1.32;
+}
+
+.info-list {
+  display: grid;
+  gap: 10px;
+}
+
+.info-list p {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 10px;
+  margin: 0;
+  padding: 10px 11px;
+  border: 1px solid #eee7dd;
+  border-radius: var(--ap-radius);
+  background: var(--ap-surface-2);
+  color: #33413b;
+}
+
+.info-list span,
+.form-review dt {
+  color: var(--ap-muted);
+  font-weight: 600;
+}
+
+.form-panel {
+  background: #fffdfa;
+}
+
+.form-review {
+  padding: 4px;
+}
+
+.form-review dd {
+  color: #33413b;
+}
+
+.management-panel {
+  background: linear-gradient(180deg, #fffdfa, #f7f3ec);
+}
+
+.management-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.management-heading h2 {
+  margin-bottom: 0;
+}
+
+.management-panel .status {
+  margin-bottom: 8px;
+}
+
+.signed-acta-box {
+  padding: 12px;
+  border: 1px solid var(--ap-border);
+  border-radius: var(--ap-radius);
+  background: var(--ap-surface-2);
+}
+
+.history-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.history-summary div {
+  padding: 10px;
+  border: 1px solid var(--ap-border);
+  border-radius: var(--ap-radius);
+  background: var(--ap-surface-2);
+}
+
+.history-summary span {
+  display: block;
+  color: var(--ap-muted);
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.history-summary strong {
+  display: block;
+  margin-top: 3px;
+  color: var(--ap-ink);
+  font-size: 1.05rem;
+  font-weight: 650;
+}
+
+.modal-content-custom {
+  width: min(560px, 100%);
+}
+
+@media (max-width: 720px) {
+  .info-list p {
+    grid-template-columns: 1fr;
+  }
+}

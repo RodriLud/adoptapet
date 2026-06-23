@@ -1,0 +1,100 @@
+# ==================== Android Gradle Build ====================
+/build
+/.gradle
+/gradle
+/.gradle/
+gradle-app.setting
+local.properties
+gradlew
+gradlew.bat
+
+# ==================== Android Studio ====================
+.idea/
+.idea_modules/
+*.iml
+*.iws
+*.ipr
+*.aar
+out/
+
+# ==================== Built Application Files ====================
+*.apk
+*.unaligned.apk
+*.dex
+*.pre-dexed.jar
+build.log
+
+# ==================== Keystore & Signing Files (SENSITIVE) ====================
+*.keystore
+*.jks
+*.pem
+*.p12
+*.pfx
+key.properties
+signing.properties
+!keystore.example
+!key.properties.example
+
+# ==================== Firebase & Cloud Services ====================
+google-services.json
+!google-services-example.json
+firebase-adminsdk-*.json
+firebase-config.json
+!firebase-config.example.json
+
+# ==================== Configuration Files (Sensitive) ====================
+.env
+.env.local
+.env.*.local
+local.properties
+gradle.properties
+!gradle.properties.example
+
+# ==================== Generated Files ====================
+.classpath
+.project
+.cproject
+.factorypath
+
+# ==================== Kotlin ====================
+.kotlin/
+*.kotlin_module
+
+# ==================== Application Generated Content ====================
+uploads/
+storage/
+documents/
+fotos_mascotas/
+app/src/main/res/drawable/cache/
+app/src/main/res/drawable-*/cache/
+
+# ==================== Testing ====================
+/app/build/
+/app/.gradle
+cover/
+
+# ==================== Logs ====================
+*.log
+report.log
+
+# ==================== System Files ====================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ==================== Editor Temp Files ====================
+*.swp
+*.swo
+*~
+*.orig
+*.bak
+
+# ==================== Third party ====================
+.gradle/
+!.gradle/wrapper/
+!gradle/wrapper/

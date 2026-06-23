@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TextSectionTitle">
+        <item name="android:textColor">@color/color_principal</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextScreenTitle">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">27sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextScreenSubtitle">
+        <item name="android:textColor">@color/color_principal_claro</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TextCardTitle">
+        <item name="android:textColor">@color/color_texto</item>
+        <item name="android:textSize">19sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Widget.AdoptaPet.TextInput" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundColor">@color/color_superficie</item>
+        <item name="boxCornerRadiusTopStart">14dp</item>
+        <item name="boxCornerRadiusTopEnd">14dp</item>
+        <item name="boxCornerRadiusBottomStart">14dp</item>
+        <item name="boxCornerRadiusBottomEnd">14dp</item>
+        <item name="boxStrokeColor">@color/color_borde</item>
+    </style>
+
+    <style name="Widget.AdoptaPet.TextInput.Dropdown" parent="Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="boxBackgroundColor">@color/color_superficie</item>
+        <item name="boxCornerRadiusTopStart">14dp</item>
+        <item name="boxCornerRadiusTopEnd">14dp</item>
+        <item name="boxCornerRadiusBottomStart">14dp</item>
+        <item name="boxCornerRadiusBottomEnd">14dp</item>
+        <item name="boxStrokeColor">@color/color_borde</item>
+        <item name="android:popupBackground">@color/white</item>
+    </style>
+
+    <style name="Widget.AdoptaPet.Button.Primary" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/color_principal</item>
+        <item name="cornerRadius">14dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="iconTint">@color/white</item>
+    </style>
+
+    <style name="Widget.AdoptaPet.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="cornerRadius">14dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/color_principal</item>
+        <item name="strokeColor">@color/color_borde</item>
+    </style>
+
+    <style name="Widget.AdoptaPet.Card" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardBackgroundColor">@color/white</item>
+        <item name="cardCornerRadius">@dimen/radio_card</item>
+        <item name="cardElevation">6dp</item>
+        <item name="strokeColor">@color/color_borde</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+
+    <style name="Widget.AdoptaPet.Toolbar" parent="Widget.Material3.Toolbar">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="titleTextColor">@color/white</item>
+        <item name="navigationIconTint">@color/white</item>
+    </style>
+
+    <style name="ShapeAppearance.AdoptaPet" parent="">
+    </style>
+
+    <style name="ShapeAppearance.AdoptaPet.PetImage" parent="ShapeAppearance.AdoptaPet">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+
+</resources>

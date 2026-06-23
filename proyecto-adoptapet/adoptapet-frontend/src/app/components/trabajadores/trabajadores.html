@@ -1,0 +1,145 @@
+<main class="admin-shell">
+  <app-sidebar />
+
+  <section class="content-area">
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">Mantenimiento</p>
+        <h1>Trabajadores</h1>
+      </div>
+      <button class="ap-button ap-button-primary" (click)="nuevo()">Nuevo trabajador</button>
+    </header>
+
+    <div class="table-panel">
+      <div class="toolbar-panel">
+        <div class="section-kicker">
+          <div>
+            <h2>Equipo del portal</h2>
+            <span>{{ trabajadoresFiltrados().length }} trabajadores visibles</span>
+          </div>
+          <span class="status status-activo">{{ activos() }} activos</span>
+        </div>
+
+        <div class="list-tools">
+          <input class="ap-input search-input" type="search" placeholder="Buscar por nombre, usuario, DNI o contacto" [(ngModel)]="busqueda" (ngModelChange)="alCambiarFiltro()" />
+          <select class="ap-select compact-select" [(ngModel)]="filtroEstado" (change)="alCambiarFiltro()">
+            <option value="">Todos los estados</option>
+            <option value="ACTIVO">Activos</option>
+            <option value="INACTIVO">Inactivos</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="ap-table-wrap">
+        <table class="ap-table">
+          <thead>
+            <tr>
+              <th>Trabajador</th>
+              <th>DNI</th>
+              <th>Email</th>
+              <th>Telefono</th>
+              <th>Estado</th>
+              <th class="ap-text-end">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let t of trabajadoresPaginados()">
+              <td>
+                <strong>{{ t.nom_trabajador }} {{ t.ape_trabajador }}</strong>
+                <small class="ap-block ap-muted">{{ t.username }}</small>
+              </td>
+              <td>{{ t.dni }}</td>
+              <td>{{ t.email }}</td>
+              <td>{{ t.telefono }}</td>
+              <td><span class="status" [class.status-inactivo]="t.activo === false" [class.status-activo]="t.activo !== false">{{ t.activo === false ? 'INACTIVO' : 'ACTIVO' }}</span></td>
+              <td class="ap-text-end">
+                <div class="action-cluster">
+                  <button class="ap-button ap-button-sm ap-button-secondary" (click)="editar(t)">Editar</button>
+                  <button class="ap-button ap-button-sm ap-button-danger-outline" *ngIf="t.activo !== false" [disabled]="!puedeDesactivar(t) || trabajadorProcesandoId === t.id_usuario" (click)="eliminar(t)">
+                    {{ trabajadorProcesandoId === t.id_usuario ? 'Procesando...' : 'Desactivar' }}
+                  </button>
+                  <button class="ap-button ap-button-sm ap-button-success-outline" *ngIf="t.activo === false" [disabled]="trabajadorProcesandoId === t.id_usuario" (click)="activar(t)">
+                    {{ trabajadorProcesandoId === t.id_usuario ? 'Procesando...' : 'Activar' }}
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pagination-row" *ngIf="trabajadoresFiltrados().length > 0">
+        <span>{{ rangoActual() }}</span>
+        <div class="pagination-actions">
+          <button class="ap-button ap-button-sm ap-button-secondary" [disabled]="paginaActual === 1" (click)="cambiarPagina(paginaActual - 1)">Anterior</button>
+          <button class="ap-button ap-button-sm" *ngFor="let pagina of paginas()" [class.ap-button-active]="paginaActual === pagina" (click)="cambiarPagina(pagina)">{{ pagina }}</button>
+          <button class="ap-button ap-button-sm ap-button-secondary" [disabled]="paginaActual === totalPaginas()" (click)="cambiarPagina(paginaActual + 1)">Siguiente</button>
+        </div>
+      </div>
+
+      <div class="empty-state" *ngIf="trabajadoresFiltrados().length === 0">
+        <strong>No hay trabajadores para mostrar</strong>
+        Cambia los filtros o registra un nuevo trabajador.
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="modal-backdrop-custom" *ngIf="trabajadorEditado">
+  <section class="modal-card">
+    <header class="modal-header-clean">
+      <div>
+        <p class="eyebrow">{{ esNuevo ? 'Registro' : 'Edicion' }}</p>
+        <h2>{{ esNuevo ? 'Nuevo trabajador' : trabajadorEditado.username }}</h2>
+      </div>
+      <button class="ap-modal-close" (click)="cerrar()"></button>
+    </header>
+
+    <p class="form-section-title" *ngIf="esNuevo">Acceso al portal</p>
+    <div class="ap-field-grid ap-mb-3" *ngIf="esNuevo">
+      <div class="ap-field ap-field-6" *ngIf="esNuevo">
+        <label class="ap-label">Usuario</label>
+        <input class="ap-input" [class.ap-invalid]="!trabajadorEditado.username?.trim()" [(ngModel)]="trabajadorEditado.username" />
+      </div>
+      <div class="ap-field ap-field-6" *ngIf="esNuevo">
+        <label class="ap-label">Contrasena inicial</label>
+        <input type="password" class="ap-input" [class.ap-invalid]="!trabajadorEditado.password?.trim()" [(ngModel)]="trabajadorEditado.password" />
+      </div>
+    </div>
+
+    <p class="form-section-title">Datos personales</p>
+    <div class="ap-field-grid">
+      <div class="ap-field ap-field-6">
+        <label class="ap-label">Nombres</label>
+        <input class="ap-input" [class.ap-invalid]="!trabajadorEditado.nom_trabajador?.trim()" [(ngModel)]="trabajadorEditado.nom_trabajador" />
+      </div>
+      <div class="ap-field ap-field-6">
+        <label class="ap-label">Apellidos</label>
+        <input class="ap-input" [class.ap-invalid]="!trabajadorEditado.ape_trabajador?.trim()" [(ngModel)]="trabajadorEditado.ape_trabajador" />
+      </div>
+      <div class="ap-field ap-field-4">
+        <label class="ap-label">DNI</label>
+        <input class="ap-input" [class.ap-invalid]="!trabajadorEditado.dni?.trim()" [(ngModel)]="trabajadorEditado.dni" />
+      </div>
+      <div class="ap-field ap-field-4">
+        <label class="ap-label">Nacimiento</label>
+        <input type="date" class="ap-input" [(ngModel)]="trabajadorEditado.fec_nacimiento" />
+      </div>
+      <div class="ap-field ap-field-4">
+        <label class="ap-label">Telefono</label>
+        <input class="ap-input" [class.ap-invalid]="!trabajadorEditado.telefono?.trim()" [(ngModel)]="trabajadorEditado.telefono" />
+      </div>
+      <div class="ap-field ap-field-12">
+        <label class="ap-label">Email</label>
+        <input type="email" class="ap-input" [class.ap-invalid]="!trabajadorEditado.email?.trim()" [(ngModel)]="trabajadorEditado.email" />
+      </div>
+    </div>
+
+    <footer class="modal-actions">
+      <button class="ap-button ap-button-secondary" (click)="cerrar()">Cancelar</button>
+      <button class="ap-button ap-button-primary" [disabled]="guardando || !formularioTrabajadorValido()" (click)="guardar()">
+        {{ guardando ? 'Guardando...' : 'Guardar' }}
+      </button>
+    </footer>
+  </section>
+</div>

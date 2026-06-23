@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Widget.AdoptaPet.Card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/espacio_medio">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/espacio_medio">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/imgMascota"
+            android:layout_width="106dp"
+            android:layout_height="106dp"
+            android:background="@drawable/bg_pet_image"
+            android:contentDescription="@string/pet_image_description"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_pet_placeholder"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.AdoptaPet.PetImage" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/espacio_medio"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtNombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/sample_pet_name"
+                android:textColor="@color/color_texto"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="@string/sample_pet_info"
+                android:textColor="@color/color_texto_secundario"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/txtEtiqueta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/espacio_pequeno"
+                android:background="@drawable/bg_chip_purple"
+                android:paddingStart="12dp"
+                android:paddingTop="6dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="6dp"
+                android:text="@string/sample_pet_size"
+                android:textColor="@color/color_principal"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtEstado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/espacio_pequeno"
+                android:text="@string/sample_pet_status"
+                android:textColor="@color/color_verde"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imgFavorito"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/nav_favorites"
+            android:padding="6dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_favorite_border" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>
