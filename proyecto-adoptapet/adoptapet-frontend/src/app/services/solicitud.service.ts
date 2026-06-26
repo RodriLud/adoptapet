@@ -1,3 +1,4 @@
+import { environment } from '../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -24,7 +25,7 @@ export interface HorarioDisponibilidad {
 
 @Injectable({ providedIn: 'root' })
 export class SolicitudService {
-  private apiUrl = 'http://localhost:8080/solicitud';
+  private apiUrl = `${environment.apiUrl}/solicitud`;
 
   constructor(private http: HttpClient) {}
 

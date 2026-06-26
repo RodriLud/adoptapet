@@ -1,3 +1,4 @@
+import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -7,7 +8,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ReporteService {
-  private apiUrl = 'http://localhost:8080/reporte';
+  private apiUrl = `${environment.apiUrl}/reporte`;
 
   constructor(private http: HttpClient) {}
 

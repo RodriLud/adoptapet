@@ -1,3 +1,4 @@
+import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -7,7 +8,7 @@ import { Mascota } from '../models/mascota';
   providedIn: 'root',
 })
 export class MascotaService {
-  private apiUrl = 'http://localhost:8080/mascota';
+  private apiUrl = `${environment.apiUrl}/mascota`;
 
   constructor(private http: HttpClient) {}
 

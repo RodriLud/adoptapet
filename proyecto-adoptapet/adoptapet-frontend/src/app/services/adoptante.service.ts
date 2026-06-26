@@ -1,3 +1,4 @@
+import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -7,7 +8,7 @@ import { AdoptanteResumen } from '../models/adoptante';
   providedIn: 'root',
 })
 export class AdoptanteService {
-  private apiUrl = 'http://localhost:8080/adoptante';
+  private apiUrl = `${environment.apiUrl}/adoptante`;
 
   constructor(private http: HttpClient) {}
 
