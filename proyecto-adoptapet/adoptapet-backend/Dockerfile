@@ -13,5 +13,6 @@ EXPOSE 8080
 ENV SPRING_PROFILES_ACTIVE=prod \
     SPRING_DATASOURCE_URL=jdbc:postgresql://dpg-d8vc9i6gvqtc73c2u57g-a/adoptapet_db_mflc \
     SPRING_DATASOURCE_USERNAME=adoptapet_db_mflc_user \
-    SPRING_DATASOURCE_PASSWORD=51l6lzyTWzivsyqjv7u95a3nN9wTGb3z
+    SPRING_DATASOURCE_PASSWORD=51l6lzyTWzivsyqjv7u95a3nN9wTGb3z \
+    CORS_ALLOWED_ORIGINS=https://adoptapet-frontend-cs1b.onrender.com
 ENTRYPOINT ["java", "-jar", "app.jar"]
