@@ -184,6 +184,11 @@ class AdoptionFormActivity : AppCompatActivity() {
                     return
                 }
 
+                val idRealAdoptante = solicitud.adoptante?.id_usuario
+                if (idRealAdoptante != null && idRealAdoptante > 0) {
+                    sessionManager.actualizarUserId(idRealAdoptante)
+                }
+
                 solicitudLocalDao.guardarSolicitudPendiente(solicitud, pet.id, pet.name)
 
                 val intent = Intent(this@AdoptionFormActivity, AdoptionSuccessActivity::class.java)

@@ -15,6 +15,9 @@ interface SolicitudService {
     @GET("solicitud")
     fun listarSolicitudes(): Call<List<Solicitud>>
 
+    @GET("solicitud/adoptante/{idAdoptante}")
+    fun listarSolicitudesPorAdoptante(@Path("idAdoptante") idAdoptante: Int): Call<List<Solicitud>>
+
     @GET("solicitud/{id}")
     fun buscarSolicitud(@Path("id") id: Int): Call<Solicitud>
 

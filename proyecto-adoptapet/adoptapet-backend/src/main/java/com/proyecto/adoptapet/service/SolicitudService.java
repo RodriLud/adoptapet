@@ -77,6 +77,10 @@ public class SolicitudService {
 		return solicitudRepo.listarSolicitudesPorEstado(estado);
 	}
 
+	public List<Solicitud> listarPorAdoptante(Integer idAdoptante) {
+		return solicitudRepo.listarHistorialPorAdoptante(idAdoptante);
+	}
+
 	public Solicitud buscarPorId(Integer idSolicitud) {
 		return solicitudRepo.buscarDetallePorId(idSolicitud).orElse(null);
 	}

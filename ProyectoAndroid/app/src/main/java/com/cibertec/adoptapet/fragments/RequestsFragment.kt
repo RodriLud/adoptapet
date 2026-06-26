@@ -35,6 +35,10 @@ class RequestsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         sessionManager = SessionManager(requireContext())
         configurarRecycler()
+    }
+
+    override fun onResume() {
+        super.onResume()
         cargarSolicitudes()
     }
 

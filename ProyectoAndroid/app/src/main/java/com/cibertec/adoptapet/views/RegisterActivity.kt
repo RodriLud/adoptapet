@@ -11,9 +11,16 @@ import androidx.core.view.updatePadding
 import com.cibertec.adoptapet.MainActivity
 import com.cibertec.adoptapet.R
 import com.cibertec.adoptapet.data.FirebaseRepository
+import com.cibertec.adoptapet.data.SessionManager
 import com.cibertec.adoptapet.databinding.ActivityRegisterBinding
+import com.cibertec.adoptapet.models.Adoptante
+import com.cibertec.adoptapet.models.Usuario
+import com.cibertec.adoptapet.network.ApiClient
 import com.cibertec.adoptapet.util.SystemBarUtils
 import com.cibertec.adoptapet.util.Validador
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.Calendar
 
 class RegisterActivity : AppCompatActivity() {
@@ -21,6 +28,7 @@ class RegisterActivity : AppCompatActivity() {
     private var _binding: ActivityRegisterBinding? = null
     private val binding get() = _binding!!
     private val repository = FirebaseRepository()
+    private lateinit var sessionManager: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +36,7 @@ class RegisterActivity : AppCompatActivity() {
         _binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
         SystemBarUtils.aplicarBarras(this)
+        sessionManager = SessionManager(this)
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.scrollRegistro) { view, insets ->
             val barras = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -118,22 +127,69 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         cambiarEstadoCarga(true)
-        repository.register(
+
+        // Step 1: create Firebase Auth account
+        repository.crearCuentaFirebase(
             email = email,
             password = password,
-            name = "$nombre $apellido",
-            fono = fono,
-            dni = dni,
-            fechaNacimiento = fechaNacimiento,
-            direccion = direccion,
-            onSuccess = {
-                cambiarEstadoCarga(false)
-                Toast.makeText(this, getString(R.string.message_account_created), Toast.LENGTH_SHORT).show()
-                goToMain()
+            onSuccess = { uid ->
+                // Step 2: register adoptante in the backend (MySQL)
+                val username = email.take(50)
+                val adoptante = Adoptante(
+                    username = username,
+                    password = password,
+                    nom_adoptante = nombre,
+                    ape_adoptante = apellido,
+                    dni = dni,
+                    fec_nacimiento = fechaNacimiento,
+                    email = email,
+                    telefono = fono,
+                    direccion = direccion
+                )
+                ApiClient.authService().register(adoptante).enqueue(object : Callback<Usuario> {
+                    override fun onResponse(call: Call<Usuario>, response: Response<Usuario>) {
+                        val usuario = response.body()
+                        if (!response.isSuccessful || usuario == null) {
+                            cambiarEstadoCarga(false)
+                            Toast.makeText(this@RegisterActivity, "Error al registrar en el sistema: ${response.code()}", Toast.LENGTH_LONG).show()
+                            return
+                        }
+                        // Step 3: save all data to Firestore with correct field names
+                        repository.guardarDatosUsuario(
+                            uid = uid,
+                            idUsuario = usuario.id_usuario,
+                            username = username,
+                            nomAdoptante = nombre,
+                            apeAdoptante = apellido,
+                            email = email,
+                            telefono = fono,
+                            dni = dni,
+                            fechaNacimiento = fechaNacimiento,
+                            direccion = direccion,
+                            onSuccess = {
+                                cambiarEstadoCarga(false)
+                                sessionManager.guardarSesion(usuario, password)
+                                Toast.makeText(this@RegisterActivity, getString(R.string.message_account_created), Toast.LENGTH_SHORT).show()
+                                goToMain()
+                            },
+                            onError = { error ->
+                                cambiarEstadoCarga(false)
+                                Toast.makeText(this@RegisterActivity, "Cuenta creada, error al guardar perfil: $error", Toast.LENGTH_LONG).show()
+                                sessionManager.guardarSesion(usuario, password)
+                                goToMain()
+                            }
+                        )
+                    }
+
+                    override fun onFailure(call: Call<Usuario>, t: Throwable) {
+                        cambiarEstadoCarga(false)
+                        Toast.makeText(this@RegisterActivity, "Sin conexion al servidor: ${t.message}", Toast.LENGTH_LONG).show()
+                    }
+                })
             },
-            onError = {
+            onError = { error ->
                 cambiarEstadoCarga(false)
-                Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+                Toast.makeText(this, error, Toast.LENGTH_LONG).show()
             }
         )
     }

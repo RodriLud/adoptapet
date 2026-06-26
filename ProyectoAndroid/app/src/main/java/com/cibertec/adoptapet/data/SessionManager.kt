@@ -62,6 +62,10 @@ class SessionManager(context: Context) {
         return prefs.getString(KEY_ADDRESS, "") ?: ""
     }
 
+    fun actualizarUserId(nuevoId: Int) {
+        prefs.edit().putInt(KEY_USER_ID, nuevoId).apply()
+    }
+
     fun cerrarSesion() {
         prefs.edit().clear().apply()
     }

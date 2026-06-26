@@ -39,6 +39,7 @@ public class SecurityConfig {
 						.requestMatchers(HttpMethod.POST, "/mascota/registrar").hasAnyRole("ADMIN", "TRABAJADOR")
 						.requestMatchers(HttpMethod.PUT, "/mascota/actualizar/**").hasAnyRole("ADMIN", "TRABAJADOR")
 						.requestMatchers(HttpMethod.DELETE, "/mascota/eliminar/**").hasAnyRole("ADMIN", "TRABAJADOR")
+						.requestMatchers(HttpMethod.GET, "/solicitud/adoptante/**").permitAll()
 						.requestMatchers(HttpMethod.POST, "/solicitud/registrar").permitAll()
 						.requestMatchers(HttpMethod.PUT, "/solicitud/aprobar/**").hasAnyRole("ADMIN", "TRABAJADOR")
 						.requestMatchers(HttpMethod.PUT, "/solicitud/rechazar/**").hasAnyRole("ADMIN", "TRABAJADOR")

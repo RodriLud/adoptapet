@@ -89,7 +89,7 @@ class LoginActivity : AppCompatActivity() {
                             if (data != null) {
                                 val idUsuario = (data["id_usuario"] as? Long)?.toInt()
                                     ?: (data["id_usuario"] as? String)?.toIntOrNull()
-                                    ?: 1
+                                    ?: -1
 
                                 val username =
                                     data["username"] as? String ?: email.substringBefore("@")
@@ -140,7 +140,7 @@ class LoginActivity : AppCompatActivity() {
                     if (data != null) {
                         val idUsuario = (data["id_usuario"] as? Long)?.toInt()
                             ?: (data["id_usuario"] as? String)?.toIntOrNull()
-                            ?: 1
+                            ?: -1
 
                         val username = data["username"] as? String ?: "usuario"
                         val rol = data["rol"] as? String ?: "ROLE_ADOPTANTE"

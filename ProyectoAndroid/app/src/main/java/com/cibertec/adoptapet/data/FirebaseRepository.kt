@@ -25,44 +25,54 @@ class FirebaseRepository {
             .addOnFailureListener { onError(it.message ?: "No se pudo iniciar sesión.") }
     }
 
-    fun register(
+    fun crearCuentaFirebase(
         email: String,
         password: String,
-        name: String,
-        fono: String,
+        onSuccess: (uid: String) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnSuccessListener { result ->
+                onSuccess(result.user?.uid ?: "")
+            }
+            .addOnFailureListener { e ->
+                onError(e.message ?: "No se pudo registrar la cuenta.")
+            }
+    }
+
+    fun guardarDatosUsuario(
+        uid: String,
+        idUsuario: Int,
+        username: String,
+        nomAdoptante: String,
+        apeAdoptante: String,
+        email: String,
+        telefono: String,
         dni: String,
         fechaNacimiento: String,
         direccion: String,
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {
-        // 1. Crear usuario en Firebase Auth
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnSuccessListener { result ->
-                val uid = result.user?.uid ?: ""
-
-                // 2. Preparar datos para Firestore
-                val userData = hashMapOf(
-                    "uid" to uid,
-                    "name" to name,
-                    "email" to email,
-                    "fono" to fono,
-                    "dni" to dni,
-                    "fechaNacimiento" to fechaNacimiento,
-                    "direccion" to direccion,
-                    "rol" to "ROLE_ADOPTANTE"
-                )
-
-                // 3. Guardar en Firestore
-                db.collection("users").document(uid)
-                    .set(userData)
-                    .addOnSuccessListener { onSuccess() }
-                    .addOnFailureListener { e ->
-                        onError("Cuenta creada, pero error al guardar datos: ${e.message}")
-                    }
-            }
+        val userData = hashMapOf(
+            "uid" to uid,
+            "id_usuario" to idUsuario,
+            "username" to username,
+            "nom_adoptante" to nomAdoptante,
+            "ape_adoptante" to apeAdoptante,
+            "email" to email,
+            "telefono" to telefono,
+            "dni" to dni,
+            "fec_nacimiento" to fechaNacimiento,
+            "direccion" to direccion,
+            "rol" to "ROLE_ADOPTANTE",
+            "activo" to true
+        )
+        db.collection("users").document(uid)
+            .set(userData)
+            .addOnSuccessListener { onSuccess() }
             .addOnFailureListener { e ->
-                onError(e.message ?: "No se pudo registrar la cuenta.")
+                onError(e.message ?: "Error al guardar datos de usuario")
             }
     }
 

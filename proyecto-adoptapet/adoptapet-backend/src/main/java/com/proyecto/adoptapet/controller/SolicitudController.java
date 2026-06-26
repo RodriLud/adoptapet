@@ -40,6 +40,11 @@ public class SolicitudController {
 		return ResponseEntity.ok(service.listarSolicitudes(estado));
 	}
 
+	@GetMapping("/adoptante/{idAdoptante}")
+	public ResponseEntity<?> listarPorAdoptante(@PathVariable Integer idAdoptante) {
+		return ResponseEntity.ok(service.listarPorAdoptante(idAdoptante));
+	}
+
 	@GetMapping("/{id}")
 	public ResponseEntity<?> buscarPorId(@PathVariable(name = "id") int idSolicitud) {
 		Solicitud solicitud = service.buscarPorId(idSolicitud);

@@ -19,36 +19,36 @@ object RequestRepository {
         sessionManager: SessionManager,
         callback: (List<AdoptionRequest>, Boolean) -> Unit
     ) {
-        val service = ApiClient.solicitudService(
-            sessionManager.obtenerUsername(),
-            sessionManager.obtenerPassword()
-        )
+        val idUsuario = sessionManager.obtenerUserId()
+        if (idUsuario <= 0) {
+            cargarDesdeSqlite(context, callback)
+            return
+        }
 
-        service.listarSolicitudes().enqueue(object : Callback<List<Solicitud>> {
-            override fun onResponse(
-                call: Call<List<Solicitud>>,
-                response: Response<List<Solicitud>>
-            ) {
-                val idUsuario = sessionManager.obtenerUserId()
-                val lista = response.body()
-                    .orEmpty()
-                    .filter { it.adoptante?.id_usuario == idUsuario }
-                    .map { it.toAdoptionRequest() }
-                    .sortedByDescending { it.id }
+        ApiClient.solicitudServicePublica()
+            .listarSolicitudesPorAdoptante(idUsuario)
+            .enqueue(object : Callback<List<Solicitud>> {
+                override fun onResponse(
+                    call: Call<List<Solicitud>>,
+                    response: Response<List<Solicitud>>
+                ) {
+                    if (response.isSuccessful) {
+                        val lista = response.body()
+                            .orEmpty()
+                            .map { it.toAdoptionRequest() }
+                            .sortedByDescending { it.id }
+                        solicitudes = lista
+                        SolicitudLocalDao(context).guardarSolicitudes(lista)
+                        callback(lista, true)
+                    } else {
+                        cargarDesdeSqlite(context, callback)
+                    }
+                }
 
-                if (response.isSuccessful) {
-                    solicitudes = lista
-                    SolicitudLocalDao(context).guardarSolicitudes(lista)
-                    callback(lista, true)
-                } else {
+                override fun onFailure(call: Call<List<Solicitud>>, t: Throwable) {
                     cargarDesdeSqlite(context, callback)
                 }
-            }
-
-            override fun onFailure(call: Call<List<Solicitud>>, t: Throwable) {
-                cargarDesdeSqlite(context, callback)
-            }
-        })
+            })
     }
 
     fun buscarSolicitud(
@@ -57,11 +57,6 @@ object RequestRepository {
         idSolicitud: Int,
         callback: (AdoptionRequest?) -> Unit
     ) {
-        solicitudes.find { it.id == idSolicitud }?.let {
-            callback(it)
-            return
-        }
-
         val service = ApiClient.solicitudService(
             sessionManager.obtenerUsername(),
             sessionManager.obtenerPassword()
