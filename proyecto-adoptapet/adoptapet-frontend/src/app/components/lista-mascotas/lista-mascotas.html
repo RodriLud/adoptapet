@@ -57,7 +57,7 @@
             <tr *ngFor="let m of mascotasPaginadas()">
               <td>
                 <div class="pet-cell">
-                  <img [src]="imagenUrl(m)" alt="" />
+                  <img [src]="imagenUrl(m)" alt="" (error)="$any($event.target).src='assets/img/fondologin.jpg'" />
                   <div>
                     <strong>{{ m.nombre }}</strong>
                     <small>{{ m.raza }}</small>
