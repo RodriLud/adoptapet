@@ -35,6 +35,6 @@ public interface SolicitudRepository extends JpaRepository<Solicitud, Integer>{
 	List<Solicitud> listarPorMascotaYEstadoExcluyendo(@Param("idMascota") Integer idMascota,
 			@Param("estado") String estado, @Param("idSolicitud") Integer idSolicitud);
 
-	@Query("SELECT s FROM Solicitud s JOIN FETCH s.mascota WHERE s.adoptante.id_usuario = :idAdoptante ORDER BY s.fecha_registro DESC, s.id_solicitud DESC")
+	@Query("SELECT s FROM Solicitud s JOIN FETCH s.mascota LEFT JOIN FETCH s.programacionEntrega LEFT JOIN FETCH s.trabajador WHERE s.adoptante.id_usuario = :idAdoptante ORDER BY s.fecha_registro DESC, s.id_solicitud DESC")
 	List<Solicitud> listarHistorialPorAdoptante(@Param("idAdoptante") Integer idAdoptante);
 }
