@@ -2,12 +2,14 @@ package com.proyecto.adoptapet.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -27,6 +29,20 @@ public class SecurityConfig {
 	}
 
 	@Bean
+	@Order(1)
+	public SecurityFilterChain publicFilterChain(HttpSecurity http) throws Exception {
+		http
+				.securityMatcher("/solicitud/adoptante/**")
+				.csrf(AbstractHttpConfigurer::disable)
+				.cors(Customizer.withDefaults())
+				.authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+				.httpBasic(AbstractHttpConfigurer::disable);
+
+		return http.build();
+	}
+
+	@Bean
+	@Order(2)
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 				.csrf(csrf -> csrf.disable())
@@ -39,7 +55,6 @@ public class SecurityConfig {
 						.requestMatchers(HttpMethod.POST, "/mascota/registrar").hasAnyRole("ADMIN", "TRABAJADOR")
 						.requestMatchers(HttpMethod.PUT, "/mascota/actualizar/**").hasAnyRole("ADMIN", "TRABAJADOR")
 						.requestMatchers(HttpMethod.DELETE, "/mascota/eliminar/**").hasAnyRole("ADMIN", "TRABAJADOR")
-						.requestMatchers(HttpMethod.GET, "/solicitud/adoptante/**").permitAll()
 						.requestMatchers(HttpMethod.POST, "/solicitud/registrar").permitAll()
 						.requestMatchers(HttpMethod.PUT, "/solicitud/aprobar/**").hasAnyRole("ADMIN", "TRABAJADOR")
 						.requestMatchers(HttpMethod.PUT, "/solicitud/rechazar/**").hasAnyRole("ADMIN", "TRABAJADOR")

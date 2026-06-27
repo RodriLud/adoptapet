@@ -25,7 +25,15 @@ object RequestRepository {
             return
         }
 
-        ApiClient.solicitudServicePublica()
+        val username = sessionManager.obtenerUsername()
+        val password = sessionManager.obtenerPassword()
+        val service = if (!username.isNullOrBlank() && !password.isNullOrBlank()) {
+            ApiClient.solicitudService(username, password)
+        } else {
+            ApiClient.solicitudServicePublica()
+        }
+
+        service
             .listarSolicitudesPorAdoptante(idUsuario)
             .enqueue(object : Callback<List<Solicitud>> {
                 override fun onResponse(
