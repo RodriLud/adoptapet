@@ -40,6 +40,10 @@ class HomeFragment : Fragment() {
         configurarRecyclerView()
         configurarBotones()
         configurarBuscador()
+    }
+
+    override fun onResume() {
+        super.onResume()
         cargarMascotas()
     }
 
@@ -63,11 +67,8 @@ class HomeFragment : Fragment() {
             mascotasActuales = mascotas
             filtrarPets()
 
-            if (mascotas.isEmpty()) {
-                Toast.makeText(requireContext(), "No hay mascotas disponibles", Toast.LENGTH_SHORT).show()
-            } else if (!desdeServidor) {
-                Toast.makeText(requireContext(), "Mostrando mascotas guardadas en el celular", Toast.LENGTH_SHORT).show()
-            }
+            val fuente = if (desdeServidor) "Red" else "SQLite"
+            Toast.makeText(requireContext(), "$fuente: ${mascotas.size} mascotas", Toast.LENGTH_LONG).show()
         }
     }
 

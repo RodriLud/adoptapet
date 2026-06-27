@@ -4,7 +4,7 @@
   <section class="content-area">
     <header class="page-header">
       <div>
-        <p class="eyebrow">Evaluacion</p>
+        <p class="eyebrow">Evaluación</p>
         <h1>Solicitudes</h1>
       </div>
       <div class="filter-row">
@@ -107,7 +107,7 @@
   <section class="modal-content-custom">
     <header class="modal-header-clean">
       <div>
-        <p class="eyebrow">Gestion solicitud</p>
+        <p class="eyebrow">Gestión solicitud</p>
         <h2 *ngIf="modalAccion === 'aprobar'">Programar entrega</h2>
         <h2 *ngIf="modalAccion === 'rechazar'">Motivo de rechazo</h2>
       </div>
@@ -125,10 +125,10 @@
       <div class="availability-note ap-mb-3" *ngIf="cargandoHorarios">Consultando cupos...</div>
       <div class="availability-note ap-mb-3" *ngIf="!cargandoHorarios && sinHorariosDisponibles()">No hay cupos disponibles para esta fecha.</div>
 
-      <label class="ap-label">Fecha limite de cierre</label>
+      <label class="ap-label">Fecha límite de cierre</label>
       <input class="ap-input ap-mb-3" type="datetime-local" [(ngModel)]="programacionForm.fecha_limite_recojo" />
 
-      <label class="ap-label">Observacion</label>
+      <label class="ap-label">Observación</label>
       <textarea class="ap-textarea" rows="3" [(ngModel)]="programacionForm.observacion"></textarea>
     </div>
 

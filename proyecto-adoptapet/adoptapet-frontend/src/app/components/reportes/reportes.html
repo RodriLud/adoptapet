@@ -4,7 +4,7 @@
   <section class="content-area">
     <header class="page-header reports-header">
       <div>
-        <p class="eyebrow">Analisis administrativo</p>
+        <p class="eyebrow">Análisis administrativo</p>
         <h1>Reportes</h1>
       </div>
       <button class="ap-button ap-button-light report-period" type="button" [disabled]="descargando" (click)="descargarPdf()">
@@ -45,15 +45,15 @@
       <article>
         <span>Mascotas filtradas</span>
         <strong>{{ mascotasFiltradas.length }}</strong>
-        <small>Segun estado y especie</small>
+        <small>Según estado y especie</small>
       </article>
       <article>
         <span>Solicitudes filtradas</span>
         <strong>{{ solicitudesFiltradas.length }}</strong>
-        <small>Segun estado seleccionado</small>
+        <small>Según estado seleccionado</small>
       </article>
       <article>
-        <span>Tasa de finalizacion</span>
+        <span>Tasa de finalización</span>
         <strong>{{ tasaFinalizacion() }}%</strong>
         <small>Finalizadas sobre solicitudes filtradas</small>
       </article>
@@ -101,7 +101,7 @@
       </section>
 
       <section class="detail-panel report-card accent-rose">
-        <h2>Ultimas adopciones finalizadas</h2>
+        <h2>Últimas adopciones finalizadas</h2>
         <div class="report-list">
           <div *ngFor="let s of ultimasFinalizadas()">
             <strong>{{ s.adoptante?.nom_adoptante }} {{ s.adoptante?.ape_adoptante }}</strong>

@@ -37,7 +37,7 @@
               <th>Trabajador</th>
               <th>DNI</th>
               <th>Email</th>
-              <th>Telefono</th>
+              <th>Teléfono</th>
               <th>Estado</th>
               <th class="ap-text-end">Acciones</th>
             </tr>
@@ -89,7 +89,7 @@
   <section class="modal-card">
     <header class="modal-header-clean">
       <div>
-        <p class="eyebrow">{{ esNuevo ? 'Registro' : 'Edicion' }}</p>
+        <p class="eyebrow">{{ esNuevo ? 'Registro' : 'Edición' }}</p>
         <h2>{{ esNuevo ? 'Nuevo trabajador' : trabajadorEditado.username }}</h2>
       </div>
       <button class="ap-modal-close" (click)="cerrar()"></button>
@@ -102,7 +102,7 @@
         <input class="ap-input" [class.ap-invalid]="!trabajadorEditado.username?.trim()" [(ngModel)]="trabajadorEditado.username" />
       </div>
       <div class="ap-field ap-field-6" *ngIf="esNuevo">
-        <label class="ap-label">Contrasena inicial</label>
+        <label class="ap-label">Contraseña inicial</label>
         <input type="password" class="ap-input" [class.ap-invalid]="!trabajadorEditado.password?.trim()" [(ngModel)]="trabajadorEditado.password" />
       </div>
     </div>
@@ -126,7 +126,7 @@
         <input type="date" class="ap-input" [(ngModel)]="trabajadorEditado.fec_nacimiento" />
       </div>
       <div class="ap-field ap-field-4">
-        <label class="ap-label">Telefono</label>
+        <label class="ap-label">Teléfono</label>
         <input class="ap-input" [class.ap-invalid]="!trabajadorEditado.telefono?.trim()" [(ngModel)]="trabajadorEditado.telefono" />
       </div>
       <div class="ap-field ap-field-12">

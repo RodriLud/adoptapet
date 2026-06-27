@@ -26,8 +26,8 @@
         <div class="info-list">
           <p><span>DNI</span>{{ solicitud.adoptante?.dni }}</p>
           <p><span>Email</span>{{ solicitud.adoptante?.email }}</p>
-          <p><span>Telefono</span>{{ solicitud.adoptante?.telefono }}</p>
-          <p><span>Direccion</span>{{ solicitud.adoptante?.direccion }}</p>
+          <p><span>Teléfono</span>{{ solicitud.adoptante?.telefono }}</p>
+          <p><span>Dirección</span>{{ solicitud.adoptante?.direccion }}</p>
         </div>
       </section>
 
@@ -43,7 +43,7 @@
             <strong>{{ historialAdoptante.finalizadas || 0 }}</strong>
           </div>
           <div>
-            <span>No asistio</span>
+            <span>No asistió</span>
             <strong>{{ historialAdoptante.no_asistio || 0 }}</strong>
           </div>
           <div>
@@ -60,14 +60,14 @@
         <div class="info-list">
           <p><span>Especie</span>{{ solicitud.mascota?.especie }} - {{ solicitud.mascota?.raza }}</p>
           <p><span>Salud</span>{{ solicitud.mascota?.est_salud }}</p>
-          <p><span>Adopcion</span>{{ solicitud.mascota?.est_adopcion }}</p>
+          <p><span>Adopción</span>{{ solicitud.mascota?.est_adopcion }}</p>
         </div>
       </section>
 
       <section class="detail-panel detail-panel-wide request-panel form-panel">
         <h2>Formulario digital</h2>
         <dl class="form-review">
-          <dt>Motivo de adopcion</dt>
+          <dt>Motivo de adopción</dt>
           <dd>{{ solicitud.motivo_adopcion || '-' }}</dd>
           <dt>Tipo de vivienda</dt>
           <dd>{{ solicitud.tipo_vivienda || '-' }}</dd>
@@ -95,10 +95,10 @@
         <div class="info-list" *ngIf="solicitud.programacionEntrega">
           <p><span>Entrega</span>{{ solicitud.programacionEntrega.fecha_entrega }}</p>
           <p><span>Horario</span>{{ formatHora(solicitud.programacionEntrega.hora_inicio) }} - {{ formatHora(solicitud.programacionEntrega.hora_fin) }}</p>
-          <p><span>Limite cierre</span>{{ formatFechaHora(solicitud.programacionEntrega.fecha_limite_recojo) }}</p>
+          <p><span>Límite cierre</span>{{ formatFechaHora(solicitud.programacionEntrega.fecha_limite_recojo) }}</p>
           <p><span>Estado cita</span>{{ solicitud.programacionEntrega.estado_programacion }}</p>
           <p *ngIf="solicitud.programacionEntrega.observacion"><span>Observación</span>{{ solicitud.programacionEntrega.observacion }}</p>
-          <p *ngIf="solicitud.programacionEntrega.motivo_cancelacion"><span>Motivo cancelacion</span>{{ solicitud.programacionEntrega.motivo_cancelacion }}</p>
+          <p *ngIf="solicitud.programacionEntrega.motivo_cancelacion"><span>Motivo cancelación</span>{{ solicitud.programacionEntrega.motivo_cancelacion }}</p>
         </div>
         <div class="info-list" *ngIf="solicitud.motivo_rechazo">
           <p><span>Motivo rechazo</span>{{ solicitud.motivo_rechazo }}</p>
@@ -113,7 +113,7 @@
         <div class="management-heading">
           <div>
             <p class="eyebrow">Estado actual</p>
-            <h2>Gestion</h2>
+            <h2>Gestión</h2>
           </div>
           <span class="status" [ngClass]="statusClass(solicitud.estado_solicitud)">{{ solicitud.estado_solicitud }}</span>
         </div>
@@ -138,7 +138,7 @@
         <button class="ap-button ap-button-warning ap-full ap-mb-2" *ngIf="solicitud.estado_solicitud === 'APROBADA'" [disabled]="!puedeFinalizarContingencia() || !!procesandoAccion" (click)="finalizarContingencia()">Finalizar por contingencia</button>
         <div class="soft-note ap-mb-2" *ngIf="mensajeContingenciaVisible()">{{ mensajeContingenciaVisible() }}</div>
         <button class="ap-button ap-button-warning-outline ap-full ap-mb-2" *ngIf="solicitud.estado_solicitud === 'APROBADA'" [disabled]="!!procesandoAccion" (click)="marcarNoAsistio()">
-          {{ procesandoAccion === 'no-asistio' ? 'Marcando...' : 'Marcar no asistio' }}
+          {{ procesandoAccion === 'no-asistio' ? 'Marcando...' : 'Marcar no asistió' }}
         </button>
         <button class="ap-button ap-button-outline ap-full ap-mb-2" *ngIf="solicitud.estado_solicitud === 'APROBADA' || solicitud.estado_solicitud === 'NO_ASISTIO'" [disabled]="!puedeReprogramar() || !!procesandoAccion" (click)="reprogramar()">Reprogramar cita</button>
         <button class="ap-button ap-button-danger-outline ap-full" *ngIf="solicitud.estado_solicitud === 'APROBADA' || solicitud.estado_solicitud === 'NO_ASISTIO'" [disabled]="!!procesandoAccion" (click)="cancelar()">Cancelar definitivo</button>
@@ -151,11 +151,11 @@
   <section class="modal-content-custom">
     <header class="modal-header-clean">
       <div>
-        <p class="eyebrow">Gestion solicitud</p>
+        <p class="eyebrow">Gestión solicitud</p>
         <h2 *ngIf="modalAccion === 'aprobar'">Programar entrega</h2>
         <h2 *ngIf="modalAccion === 'reprogramar'">Reprogramar cita</h2>
         <h2 *ngIf="modalAccion === 'rechazar'">Motivo de rechazo</h2>
-        <h2 *ngIf="modalAccion === 'cancelar'">Motivo de cancelacion</h2>
+        <h2 *ngIf="modalAccion === 'cancelar'">Motivo de cancelación</h2>
         <h2 *ngIf="modalAccion === 'contingencia'">Finalizar por contingencia</h2>
       </div>
       <button class="ap-modal-close" type="button" [disabled]="!!procesandoAccion" (click)="cerrarModal()"></button>
@@ -172,10 +172,10 @@
       <div class="availability-note ap-mb-3" *ngIf="cargandoHorarios">Consultando cupos...</div>
       <div class="availability-note ap-mb-3" *ngIf="!cargandoHorarios && sinHorariosDisponibles()">No hay cupos disponibles para esta fecha.</div>
 
-      <label class="ap-label">Fecha limite de cierre</label>
+      <label class="ap-label">Fecha límite de cierre</label>
       <input class="ap-input ap-mb-3" type="datetime-local" [(ngModel)]="programacionForm.fecha_limite_recojo" />
 
-      <label class="ap-label">Observacion</label>
+      <label class="ap-label">Observación</label>
       <textarea class="ap-textarea" rows="3" [(ngModel)]="programacionForm.observacion"></textarea>
     </div>
 

@@ -4,7 +4,7 @@
   <section class="content-area">
     <header class="page-header">
       <div>
-        <p class="eyebrow">Gestion operativa</p>
+        <p class="eyebrow">Gestión operativa</p>
         <h1>Mascotas</h1>
       </div>
       <button class="ap-button ap-button-primary" (click)="abrirRegistrador()">Nueva mascota</button>
@@ -49,7 +49,7 @@
               <th>Especie</th>
               <th>Edad</th>
               <th>Salud</th>
-              <th>Adopcion</th>
+              <th>Adopción</th>
               <th class="ap-text-end">Acciones</th>
             </tr>
           </thead>
@@ -61,7 +61,7 @@
                   <div>
                     <strong>{{ m.nombre }}</strong>
                     <small>{{ m.raza }}</small>
-                    <small class="pet-meta">{{ m.sexo || 'Sin sexo' }} · {{ m.estado_esterilizacion || 'Esterilizacion pendiente' }}</small>
+                    <small class="pet-meta">{{ m.sexo || 'Sin sexo' }} · {{ m.estado_esterilizacion || 'Esterilización pendiente' }}</small>
                   </div>
                 </div>
               </td>
@@ -103,7 +103,7 @@
   <section class="modal-card">
     <header class="modal-header-clean">
       <div>
-        <p class="eyebrow">{{ esNuevo ? 'Registro' : 'Edicion' }}</p>
+        <p class="eyebrow">{{ esNuevo ? 'Registro' : 'Edición' }}</p>
         <h2>{{ esNuevo ? 'Nueva mascota' : mascotaEditada.nombre }}</h2>
       </div>
       <button class="ap-modal-close" (click)="cerrarEditor()"></button>
@@ -151,13 +151,13 @@
         </select>
       </div>
       <div class="ap-field ap-field-6">
-        <label class="ap-label">Estado adopcion</label>
+        <label class="ap-label">Estado adopción</label>
         <select class="ap-select" [(ngModel)]="mascotaEditada.est_adopcion" [disabled]="!puedeEditarEstadoAdopcion()">
           <option *ngFor="let estado of estadosAdopcion" [value]="estado">{{ estado }}</option>
         </select>
       </div>
       <div class="ap-field ap-field-6">
-        <label class="ap-label">Esterilizacion</label>
+        <label class="ap-label">Esterilización</label>
         <select class="ap-select" [(ngModel)]="mascotaEditada.estado_esterilizacion">
           <option *ngFor="let estado of estadosEsterilizacion" [value]="estado">{{ estado }}</option>
         </select>
@@ -168,7 +168,7 @@
       </div>
       <div class="ap-field ap-field-12">
         <label class="ap-label">Observaciones</label>
-        <textarea class="ap-textarea" rows="3" maxlength="500" placeholder="Ej. Sociable con niños, esterilizacion pendiente por edad, requiere seguimiento..." [(ngModel)]="mascotaEditada.observaciones"></textarea>
+        <textarea class="ap-textarea" rows="3" maxlength="500" placeholder="Ej. Sociable con niños, esterilización pendiente por edad, requiere seguimiento..." [(ngModel)]="mascotaEditada.observaciones"></textarea>
       </div>
     </div>
 

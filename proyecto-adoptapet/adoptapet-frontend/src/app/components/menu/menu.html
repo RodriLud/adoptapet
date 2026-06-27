@@ -4,7 +4,7 @@
   <section class="content-area">
     <header class="page-header">
       <div>
-        <p class="eyebrow">Operacion diaria</p>
+        <p class="eyebrow">Operación diaria</p>
         <h1>Dashboard</h1>
       </div>
       <div class="user-chip">
@@ -22,12 +22,12 @@
       <article class="metric-card metric-ready">
         <span>Disponibles</span>
         <strong>{{ disponibles }}</strong>
-        <p>Listas para iniciar adopcion</p>
+        <p>Listas para iniciar adopción</p>
       </article>
       <article class="metric-card metric-attention">
         <span>Solicitudes pendientes</span>
         <strong>{{ pendientes }}</strong>
-        <p>Requieren revision del equipo</p>
+        <p>Requieren revisión del equipo</p>
       </article>
       <article class="metric-card metric-reserved">
         <span>Reservadas</span>
@@ -62,11 +62,11 @@
       </article>
 
       <aside class="detail-panel action-panel">
-        <p class="eyebrow">Accesos rapidos</p>
-        <h2>Gestion operativa</h2>
+        <p class="eyebrow">Accesos rápidos</p>
+        <h2>Gestión operativa</h2>
         <button class="action-button" type="button" (click)="irMascotas()"><span>Inventario</span>Gestionar mascotas</button>
         <button class="action-button" type="button" (click)="irRegistrarMascota()"><span>Ingreso</span>Registrar mascota</button>
-        <button class="action-button" type="button" (click)="irSolicitudes()"><span>Revision</span>Revisar solicitudes</button>
+        <button class="action-button" type="button" (click)="irSolicitudes()"><span>Revisión</span>Revisar solicitudes</button>
         <button class="action-button" type="button" *ngIf="rol === 'ROLE_ADMIN'" (click)="irTrabajadores()"><span>Equipo</span>Gestionar trabajadores</button>
       </aside>
     </section>
@@ -90,7 +90,7 @@
           <strong>{{ aprobadas }}</strong>
         </div>
         <div>
-          <span>No asistio</span>
+          <span>No asistió</span>
           <strong>{{ noAsistio }}</strong>
         </div>
         <div>

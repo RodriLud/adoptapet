@@ -1,6 +1,7 @@
 package com.cibertec.adoptapet.data
 
 import android.content.Context
+import android.widget.Toast
 import com.cibertec.adoptapet.database.MascotaDao
 import com.cibertec.adoptapet.models.Mascota
 import com.cibertec.adoptapet.models.Pet
@@ -20,12 +21,15 @@ object PetRepository {
                 call: Call<List<Mascota>>,
                 response: Response<List<Mascota>>
             ) {
-                val mascotas = response.body()
-                    .orEmpty()
-                    .filter { it.estaDisponible() }
-                    .map { it.toPet() }
+                if (response.isSuccessful) {
+                    val todas = response.body().orEmpty()
+                    val debugInfo = todas.joinToString("\n") { "${it.nombre}: adopcion=${it.est_adopcion} salud=${it.est_salud}" }
+                    Toast.makeText(context, "Backend ${todas.size}:\n$debugInfo", Toast.LENGTH_LONG).show()
+                    val mascotas = todas
+                        .filter { it.estaDisponible() }
+                        .map { it.toPet() }
 
-                if (response.isSuccessful && mascotas.isNotEmpty()) {
+                    // Actualizamos siempre si la respuesta fue exitosa
                     pets = mascotas
                     MascotaDao(context).guardarMascotas(mascotas)
                     callback(mascotas, true)

@@ -4,6 +4,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 object ApiClient {
 
@@ -14,6 +15,9 @@ object ApiClient {
 
         val clientBuilder = OkHttpClient.Builder()
             .addInterceptor(logging)
+            .connectTimeout(60, TimeUnit.SECONDS) // Aumentado a 60s
+            .readTimeout(60, TimeUnit.SECONDS)    // Aumentado a 60s
+            .writeTimeout(60, TimeUnit.SECONDS)   // Aumentado a 60s
 
         if (!username.isNullOrBlank() && !password.isNullOrBlank()) {
             clientBuilder.addInterceptor(AuthInterceptor(username, password))
