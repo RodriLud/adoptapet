@@ -9,6 +9,7 @@ import { Sidebar } from '../shared/sidebar/sidebar';
 import { AdoptanteResumen } from '../../models/adoptante';
 import { AdoptanteService } from '../../services/adoptante.service';
 import { FeedbackService } from '../../services/feedback.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-solicitud-detalle',
@@ -355,7 +356,7 @@ export class SolicitudDetalle implements OnInit {
 
   abrirAdjunto(ruta?: string) {
     if (ruta) {
-      window.open(`http://localhost:8080/uploads/${ruta}`, '_blank');
+      window.open(`${environment.apiUrl}/uploads/${ruta}`, '_blank');
     }
   }
 

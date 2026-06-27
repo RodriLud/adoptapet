@@ -6,6 +6,7 @@ import { Mascota } from '../../models/mascota';
 import { AuthService } from '../../services/auth.service';
 import { Sidebar } from '../shared/sidebar/sidebar';
 import { FeedbackService } from '../../services/feedback.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-lista-mascotas',
@@ -170,7 +171,7 @@ export class ListaMascotas implements OnInit {
 
   imagenUrl(mascota: Mascota): string {
     return mascota.ruta_imagen
-      ? `http://localhost:8080/fotos_mascotas/${mascota.ruta_imagen}`
+      ? `${environment.apiUrl}/fotos_mascotas/${mascota.ruta_imagen}`
       : 'assets/img/fondologin.jpg';
   }
 
